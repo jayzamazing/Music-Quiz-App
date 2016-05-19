@@ -72,7 +72,7 @@ h1 {
   display: inline-block;
   margin-bottom: 1rem;
 }
-.status, .question, .quiz {
+.hide {
   display: none;
 }
 .submitForm, .description, p {
@@ -94,16 +94,6 @@ h1 {
   position: relative;
   left :12.5rem;
 }
-.titleAnimation {
-  -webkit-animation: spin 2s linear;
-  -moz-animation: spin 2s linear;
-  -ms-animation: spin 2s linear;
-  animation: spin 2s linear;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  }
 .titleScreen {
   display: inline-block;
   margin-top: 1rem;
@@ -146,6 +136,19 @@ h1 {
   top: 4.1rem;
   left: 30rem;
 }
+/*
+* Deals with the rotation, movement, and shrinking of h1
+*/
+.titleAnimation {
+  -webkit-animation: spin 2s linear;
+  -moz-animation: spin 2s linear;
+  -ms-animation: spin 2s linear;
+  animation: spin 2s linear;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -ms-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  }
 @-moz-keyframes spin {
   0% {-moz-transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}
   25% {-moz-transform: translatex(-7rem) translatey(-3rem) rotate(-270deg) scale(0.8)}
