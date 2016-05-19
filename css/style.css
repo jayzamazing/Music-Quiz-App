@@ -1,0 +1,140 @@
+* {
+  /*outline: red 1px solid;*/
+}
+html, body, ul, div, section, li {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-image: url('../img/backgroundimage.jpg');
+  background-size:cover;
+  height: 45.938rem;
+  background-position: center bottom;
+  overflow: auto;
+  width: 45rem;
+  margin:auto;
+  color: #b3ccff;
+}
+button {
+  border-radius: 12px;
+  background-color: #003cb3;
+  color: #b3ccff;
+}
+#answerForm button {
+  width: 8.5rem;
+  height: 5rem;
+}
+.answer {
+  margin: auto;
+  width: 44rem;
+}
+#button2 {
+  position: relative;
+  top: 5em;
+}
+#button3 {
+  position: relative;
+  top: 8em;
+}
+#button4 {
+  position: relative;
+  top: 5em;
+}
+h1 {
+  color: #66ffff;
+}
+.center {
+  margin: auto;
+}
+.content {
+  background-color: #3377ff;
+  border-radius: 25px;
+  border: 1px solid black;
+  opacity: 0.9;
+  filter: alpha(opacity=60);
+  width: 22rem;
+  padding: 1rem;
+  height: 7rem;
+  display: inline-block;;
+}
+.introduction {
+  display: none;
+}
+.submitForm, .description {
+  text-align: center;
+}
+.musicImage {
+  height: 10em;
+  width: 10em;
+}
+.title {
+  display: inline-block;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  position: relative;
+  left :12.5rem;
+}
+.title {
+  -webkit-animation: spin 2s linear;
+  -moz-animation: spin 2s linear;
+  -ms-animation: spin 2s linear;
+  animation: spin 2s linear;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -ms-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  }
+.titleScreen {
+  display: inline-block;
+  margin-top: 2rem;
+}
+.titleandpic {
+  float: left;
+  width: 43rem;
+}
+.status {
+  width: 2rem;
+  float: right;
+}
+.status ul {
+  list-style-type: none;
+  display: inline;
+}
+.arrows {
+  margin-left: .3rem;
+}
+.arrows, .status li {
+  color: grey;
+}
+.playbutton {
+  width: 2rem;
+  color: green;
+  float: right;
+  margin-top: 6rem;
+}
+
+.quizcenter {
+  width: 24rem;
+}
+@-moz-keyframes spin {
+  0% {-moz-transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}
+  25% {-moz-transform: translatex(-7rem) translatey(-3rem) rotate(-270deg) scale(0.8)}
+  50% {-moz-transform: translatex(-12rem) translatey(-4rem) rotate(-180deg) scale(0.7)}
+  75% {-moz-transform: translatex(-14rem) translatey(-5rem) rotate(-90deg) scale(0.6)}
+  100% {-moz-transform: translatex(-17rem) translatey(-7rem) rotate(-35deg) scale(0.5)}
+}
+@-webkit-keyframes spin {
+  0% {-webkit-transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}
+  25% {-webkit-transform: translatex(-7rem) translatey(-3rem) rotate(-270deg) scale(0.8)}
+  50% {-webkit-transform: translatex(-12rem) translatey(-4rem) rotate(-180deg) scale(0.7)}
+  75% {-webkit-transform: translatex(-14rem) translatey(-5rem) rotate(-90deg) scale(0.6)}
+  100% {-webkit-transform: translatex(-17rem) translatey(-7rem) rotate(-35deg) scale(0.5)}
+}
+@keyframes spin {
+  0% {transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}
+  25% {transform: translatex(-7rem) translatey(-3rem) rotate(-270deg) scale(0.8)}
+  50% {transform: translatex(-12rem) translatey(-4rem) rotate(-180deg) scale(0.7)}
+  75% {transform: translatex(-14rem) translatey(-5rem) rotate(-90deg) scale(0.6)}
+  100% {transform: translatex(-17rem) translatey(-7rem) rotate(-35deg) scale(0.5)}
+}

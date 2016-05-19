@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Music Quiz App</title>
+  <link rel="stylesheet" href="node_modules/normalize.css/normalize.css" type="text/css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+</head>
+<body>
+  <section class="titleScreen">
+    <div class="titleandpic">
+      <div>
+        <img src="img/musicimage.jpg" alt="picture of music notes" class="musicImage"/>
+      </div>
+      <div>
+        <h1 class="title"><i class="fa fa-music" aria-hidden="true"></i> Music Quiz App <i class="fa fa-music" aria-hidden="true"></i></h1>
+      </div>
+    </div>
+    <div class="status">
+      <ul>
+        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
+        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
+        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
+        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
+        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+      </ul>
+    </div>
+  </section>
+  <section class="introduction">
+    <div class="content center">
+      <h3 class="description">Welcome to the Music Quiz App.<br> Press Start Game to test<br> your music knowledge. </h3>
+      <form action="" id="startGame" class="submitForm">
+        <button type="submit" name="submit">Start Game</button>
+      </form>
+    </div>
+  </section>
+  <section class="quiz">
+    <div class="center quizcenter">
+      <div class="content"></div>
+      <div class="playbutton"><i class="fa fa-play-circle" aria-hidden="true"></i></div>
+    </div>
+    <div class="answer">
+      <form action="" id="answerForm">
+        <button id="button1" type="submit" name="submit" value="1">a</button>
+        <button id="button2" type="submit" name="submit" value="2">b</button>
+        <button id="button3" type="submit" name="submit" value="3">c</button>
+        <button id="button4" type="submit" name="submit"value="4">d</button>
+        <button id="button5" type="submit" name="submit" value="5">e</button>
+      </form>
+    </div>
+  </section>
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
