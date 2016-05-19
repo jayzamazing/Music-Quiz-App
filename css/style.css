@@ -16,12 +16,15 @@ body {
   margin:auto;
   color: #b3ccff;
 }
-button {
+button, input[type=radio] + label, input {
+  opacity: 0.7;
+  filter: alpha(opacity=70);
   border-radius: 12px;
   background-color: #003cb3;
   color: #b3ccff;
+  position: relative;
 }
-#answerForm button {
+#answerForm label {
   width: 8.5rem;
   height: 5rem;
 }
@@ -29,17 +32,27 @@ button {
   margin: auto;
   width: 44rem;
 }
-#button2 {
-  position: relative;
-  top: 5em;
+input[type=radio] {
+  display: none;
+  margin:10px;
 }
-#button3 {
-  position: relative;
-  top: 8em;
+input[type=radio] + label {
+  display:inline-block;
+  color: #b3ccff;
 }
-#button4 {
-  position: relative;
-  top: 5em;
+input[type=radio]:checked + label {
+   background-image: none;
+   background-color: red;
+}
+#radio2, #radio4 {
+  top: 2.5rem;
+}
+#radio3 {
+  top: 5rem;
+}
+#button6 {
+  top: 5.5rem;
+  left: 30rem;
 }
 h1 {
   color: #66ffff;
@@ -51,22 +64,25 @@ h1 {
   background-color: #3377ff;
   border-radius: 25px;
   border: 1px solid black;
-  opacity: 0.9;
-  filter: alpha(opacity=60);
+  opacity: 0.7;
+  filter: alpha(opacity=70);
   width: 22rem;
   padding: 1rem;
   height: 7rem;
-  display: inline-block;;
+  display: inline-block;
+  margin-bottom: 1rem;
 }
 .introduction {
   display: none;
 }
-.submitForm, .description {
+.submitForm, .description, p {
   text-align: center;
 }
 .musicImage {
   height: 10em;
   width: 10em;
+  border: 2px solid;
+  border-radius: 12px;
 }
 .title {
   display: inline-block;
@@ -87,7 +103,7 @@ h1 {
   }
 .titleScreen {
   display: inline-block;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 .titleandpic {
   float: left;
@@ -102,20 +118,24 @@ h1 {
   display: inline;
 }
 .arrows {
-  margin-left: .3rem;
+  margin-left: .5rem;
 }
 .arrows, .status li {
   color: grey;
 }
 .playbutton {
-  width: 2rem;
+  width: 3rem;
   color: green;
   float: right;
-  margin-top: 6rem;
+  margin-top: 2.8rem;
+  margin-bottom: 2.1rem;
+  padding-left: 1.2rem
 }
-
-.quizcenter {
-  width: 24rem;
+.introsize {
+  width: 22rem;
+}
+.quizsize {
+  width: 25rem;
 }
 @-moz-keyframes spin {
   0% {-moz-transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}

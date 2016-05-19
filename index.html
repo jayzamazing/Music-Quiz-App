@@ -15,42 +15,46 @@
       </div>
       <div>
         <h1 class="title"><i class="fa fa-music" aria-hidden="true"></i> Music Quiz App <i class="fa fa-music" aria-hidden="true"></i></h1>
+        <p>Who was the the singer and name of the record behind the following song?</p>
       </div>
     </div>
     <div class="status">
       <ul>
-        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-music fa-lg" aria-hidden="true"></i></i></li>
         <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
-        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-music fa-lg" aria-hidden="true"></i></i></li>
         <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
-        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-music fa-lg" aria-hidden="true"></i></i></li>
         <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
-        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-music fa-lg" aria-hidden="true"></i></i></li>
         <li><i class="fa fa-long-arrow-down arrows" aria-hidden="true"></i></li>
-        <li><i class="fa fa-music" aria-hidden="true"></i></i></li>
+        <li><i class="fa fa-music fa-lg" aria-hidden="true"></i></i></li>
       </ul>
     </div>
   </section>
   <section class="introduction">
-    <div class="content center">
-      <h3 class="description">Welcome to the Music Quiz App.<br> Press Start Game to test<br> your music knowledge. </h3>
+    <div class="introsize center">
+    <div class="content">
+      <h3 class="description">Welcome to the Music Quiz App.<br> Press Start Game to test<br> your music knowledge.</h3>
       <form action="" id="startGame" class="submitForm">
-        <button type="submit" name="submit">Start Game</button>
+        <input type="submit" name="submit" value="Start Game">
       </form>
     </div>
+  </div>
   </section>
   <section class="quiz">
-    <div class="center quizcenter">
+    <div class="center quizsize">
       <div class="content"></div>
-      <div class="playbutton"><i class="fa fa-play-circle" aria-hidden="true"></i></div>
+      <div class="playbutton"><i class="fa fa-play-circle fa-2x" aria-hidden="true"></i></div>
     </div>
     <div class="answer">
       <form action="" id="answerForm">
-        <button id="button1" type="submit" name="submit" value="1">a</button>
-        <button id="button2" type="submit" name="submit" value="2">b</button>
-        <button id="button3" type="submit" name="submit" value="3">c</button>
-        <button id="button4" type="submit" name="submit"value="4">d</button>
-        <button id="button5" type="submit" name="submit" value="5">e</button>
+        <input type="radio" name="radios" id="rad1"><label id="radio1" for="rad1">a</label>
+        <input type="radio" name="radios" id="rad2"><label id="radio2" for="rad2">b</label>
+        <input type="radio" name="radios" id="rad3"><label id="radio3" for="rad3">c</label>
+        <input type="radio" name="radios" id="rad4"><label id="radio4" for="rad4">d</label>
+        <input type="radio" name="radios" id="rad5"><label id="radio5" for="rad5">e</label>
+        <input id="button6" type="submit" name="submit" value="Submit">
       </form>
     </div>
   </section>
