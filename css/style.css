@@ -13,7 +13,7 @@ body {
   background-position: center bottom;
   overflow: auto;
   width: 45rem;
-  margin:auto;
+  margin: auto;
   color: #b3ccff;
 }
 button, input[type=radio] + label, input {
@@ -72,17 +72,20 @@ h1 {
   display: inline-block;
   margin-bottom: 1rem;
 }
-.introduction {
+.status, .question, .quiz {
   display: none;
 }
 .submitForm, .description, p {
   text-align: center;
 }
-.musicImage {
+.musicPlaceholder {
   height: 10em;
   width: 10em;
+}
+.musicImage {
   border: 2px solid;
   border-radius: 12px;
+  content: url('../img/musicimage.jpg');
 }
 .title {
   display: inline-block;
@@ -91,7 +94,7 @@ h1 {
   position: relative;
   left :12.5rem;
 }
-.title {
+.titleAnimation {
   -webkit-animation: spin 2s linear;
   -moz-animation: spin 2s linear;
   -ms-animation: spin 2s linear;
