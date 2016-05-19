@@ -15,6 +15,7 @@ body {
   width: 45rem;
   margin: auto;
   color: #b3ccff;
+  background-repeat: no-repeat;
 }
 button, input[type=radio] + label, input {
   opacity: 0.7;
@@ -85,7 +86,9 @@ h1 {
 .musicImage {
   border: 2px solid;
   border-radius: 12px;
-  content: url('../img/musicimage.jpg');
+  background-image: url('../img/musicimage.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 .title {
   display: inline-block;
