@@ -2,38 +2,141 @@
   [
     {
       "id":"1",
-      "songName":"Soldier",
+      "songName":"SOLDIER",
       "songArtist":"Eminem",
       "lyrics":"Yo', never was a thug, just infatuated with guns, never was a gangsta, 'til I graduated to one, and got the rep of a villain, for weapon concealin'",
       "songUrl":"sound/Soldier.mp3"
     },
     {
       "id":"2",
-      "songName":"Soul Asylum",
-      "songArtist":"Runaway Train",
+      "songName":"RUNAWAY TRAIN",
+      "songArtist":"Soul Asylum",
       "lyrics":"Runaway train never going back Wrong way on a one way track Seems like I should be getting somewhere Somehow I'm neither here nor there",
       "songUrl":"sound/"
     },
     {
       "id":"3",
-      "songName":"Fight The Power",
+      "songName":"FIGHT THE POWER",
       "songArtist":"Public Enemy",
       "lyrics":"1989 the number another summer (get down) Sound of the funky drummer Music hittin' your heart cause I know you got soul",
       "songUrl":"sound/"
     },
     {
       "id":"4",
-      "songName":"Thunderstruck",
+      "songName":"THUNDERSTRUCK",
       "songArtist":"AC/DC",
       "lyrics":"Rode down the highway Broke the limit, we hit the town Went through to Texas, yeah Texas, and we had some fun We met some girls",
       "songUrl":"sound/"
     },
     {
       "id":"5",
-      "songName":"The Message",
+      "songName":"THE MESSAGE",
       "songArtist":"Grandmaster Flash & the Furious Five",
       "lyrics":"Got no money to move out, I guess I got no choice Rats in the front room, roaches in the back Junkies in the alley with a baseball bat I tried to get away but I couldn't get far",
       "songUrl":"sound/"
+    }
+  ],
+  "otherSongDetails" :
+  [
+    {
+      "id":"1",
+      "songName":"One More Night",
+      "songArtist":"Maroon 5"
+    },
+    {
+      "id":"2",
+      "songName":"THE TWIST",
+      "songArtist":"Chubby Checker"
+    },
+    {
+      "id":"3",
+      "songName":"I GOTTA FEELING",
+      "songArtist":"The Black Eyed Peas"
+    },
+    {
+      "id":"4",
+      "songName":"HEY JUDE",
+      "songArtist":"The Beatles"
+    },
+    {
+      "id":"5",
+      "songName":"BETTE DAVIS EYES",
+      "songArtist":"Kim Carnes"
+    },
+    {
+      "id":"6",
+      "songName":"LE FREAK",
+      "songArtist":"Chic"
+    },
+    {
+      "id":"7",
+      "songName":"EYE OF THE TIGER",
+      "songArtist":"Survivor"
+    },
+    {
+      "id":"8",
+      "songName":"LOW",
+      "songArtist":"Flo Rida"
+    },
+    {
+      "id":"9",
+      "songName":"I JUST WANT TO BE YOUR EVERYTHING",
+      "songArtist":"Andy Gibb"
+    },
+    {
+      "id":"10",
+      "songName":"EVERY BREATH YOU TAKE",
+      "songArtist":"The Police"
+    },
+    {
+      "id":"11",
+      "songName":"FLASHDANCE...WHAT A FEELING",
+      "songArtist":"Irene Cara"
+    },
+    {
+      "id":"12",
+      "songName":"THE BATTLE OF NEW ORLEANS",
+      "songArtist":"Johnny Horton"
+    },
+    {
+      "id":"13",
+      "songName":"TRULY MADLY DEEPLY",
+      "songArtist":"Savage Garden"
+    },
+    {
+      "id":"14",
+      "songName":"LET'S GET IT ON",
+      "songArtist":"Marvin Gaye"
+    },
+    {
+      "id":"15",
+      "songName":"HOW YOU REMIND ME",
+      "songArtist":"Nickelback"
+    },
+    {
+      "id":"16",
+      "songName":"",
+      "songArtist":""
+    },
+    {
+      "id":"17",
+      "songName":"SHADOW DANCING",
+      "songArtist":"Andy Gibb"
+    },
+    {
+      "id":"18",
+      "songName":"NO ONE",
+      "songArtist":"Alicia Keys"
+    },
+    {
+      "id":"19",
+      "songName":"CALL ME",
+      "songArtist":"Blondie"
+    },
+    {
+      "id":"20",
+      "songName":"THE SIGN",
+      "songArtist":"Ace Of Base"
     }
   ]
 }
