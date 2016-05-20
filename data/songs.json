@@ -1,0 +1,39 @@
+{ "songDetails" :
+  [
+    {
+      "id":"1",
+      "songName":"Soldier",
+      "songArtist":"Eminem",
+      "lyrics":"Yo', never was a thug, just infatuated with guns, never was a gangsta, 'til I graduated to one, and got the rep of a villain, for weapon concealin'",
+      "songUrl":"sound/Soldier.mp3"
+    },
+    {
+      "id":"2",
+      "songName":"Soul Asylum",
+      "songArtist":"Runaway Train",
+      "lyrics":"Runaway train never going back Wrong way on a one way track Seems like I should be getting somewhere Somehow I'm neither here nor there",
+      "songUrl":"sound/"
+    },
+    {
+      "id":"3",
+      "songName":"Fight The Power",
+      "songArtist":"Public Enemy",
+      "lyrics":"1989 the number another summer (get down) Sound of the funky drummer Music hittin' your heart cause I know you got soul",
+      "songUrl":"sound/"
+    },
+    {
+      "id":"4",
+      "songName":"Thunderstruck",
+      "songArtist":"AC/DC",
+      "lyrics":"Rode down the highway Broke the limit, we hit the town Went through to Texas, yeah Texas, and we had some fun We met some girls",
+      "songUrl":"sound/"
+    },
+    {
+      "id":"5",
+      "songName":"The Message",
+      "songArtist":"Grandmaster Flash & the Furious Five",
+      "lyrics":"Got no money to move out, I guess I got no choice Rats in the front room, roaches in the back Junkies in the alley with a baseball bat I tried to get away but I couldn't get far",
+      "songUrl":"sound/"
+    }
+  ]
+}
