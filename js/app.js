@@ -43,6 +43,11 @@ $(document).ready(function() {
       $('.next').removeClass('hide');
     }
     currentGame.setStatus();
+    $('.albumpic').css('background-image', 'url(' + currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album + ')');
+    $('.albumpic').removeClass('hide');
+    $('.singername').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songName  + '<br>' +
+      currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songArtist);
+    $('.singername').removeClass('hide');
     e.preventDefault();
   });
   /*
@@ -59,6 +64,8 @@ $(document).ready(function() {
     stopMusic('#music');
     $('.playbutton').find('i').attr("class", "fa fa-play-circle fa-2x");
     $('.playbutton').find('i').css("color", "green");
+    $('.albumpic').addClass('hide');
+    $('.singername').addClass('hide');
   });
   /*
   * Function to play and stop music. Also changes the play button picture and color.
@@ -80,6 +87,10 @@ $(document).ready(function() {
   function songsCallBack() {
     setAnswers();
   }
+  /*
+  * Function to add artist and album info the the buttons, also sets the lyrics,
+  * and the song that can be listened to
+  */
   function setAnswers() {
     $('.quiz .content').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].lyrics);
     for (i = 1; i <= 5; i++) {

@@ -61,6 +61,8 @@ input[type=radio]:checked + label {
 }
 h1 {
   color: #66ffff;
+  margin-top: 0;
+  margin-bottom: .1rem;
 }
 .center {
   margin: auto;
@@ -110,8 +112,21 @@ h1 {
   width: 43rem;
 }
 .titleother {
-  margin-left: 20rem;
+  margin-left: 19rem;
   width: 20rem;
+}
+.singername {
+  margin-left: 30rem;
+  float: left;
+  width: 10rem;
+}
+.albumpic {
+  margin-left: 20rem;
+  width: 7rem;
+  height: 7rem;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+
 }
 .status {
   width: 2rem;
