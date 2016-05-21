@@ -43,7 +43,7 @@ $(document).ready(function() {
       $('.next').removeClass('hide');
     }
     currentGame.setStatus();
-    $('.albumpic').css('background-image', 'url(' + currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album + ')');
+    $('.albumpic').css('background-image', 'url("' + currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album + '")');
     $('.albumpic').removeClass('hide');
     $('.singername').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songName  + '<br>' +
       currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songArtist);
