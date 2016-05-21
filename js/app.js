@@ -49,12 +49,16 @@ $(document).ready(function() {
   * Function to load the next set of lyrics and music artists
   */
   $('.next').click(function() {
+    /* set main question number */
+    game.setQuestionNumbers();
     //show the items on the screen
     setAnswers();
     $('.next').addClass('hide');
     $('#button6').removeClass('hide');
     $('.titleother').addClass('hide');
     stopMusic('#music');
+    $('.playbutton').find('i').attr("class", "fa fa-play-circle fa-2x");
+    $('.playbutton').find('i').css("color", "green");
   });
   /*
   * Function to play and stop music. Also changes the play button picture and color.
