@@ -26,8 +26,9 @@ button, input[type=radio] + label, input {
   position: relative;
 }
 #answerForm label {
-  width: 8.5rem;
-  height: 5rem;
+  width: 8.4rem;
+  height: 4rem;
+  border: 1px solid black;
 }
 .answer {
   margin: auto;
@@ -40,6 +41,9 @@ input[type=radio] {
 input[type=radio] + label {
   display:inline-block;
   color: #b3ccff;
+  font-size: .8rem;
+  text-align: center;
+  padding-top: 1rem;
 }
 input[type=radio]:checked + label {
    background-image: none;
@@ -104,6 +108,10 @@ h1 {
 .titleandpic {
   float: left;
   width: 43rem;
+}
+.titleother {
+  margin-left: 20rem;
+  width: 20rem;
 }
 .status {
   width: 2rem;

@@ -26,8 +26,14 @@ $(document).ready(function() {
     //if item checked matches the correct answer for the question
     if ($("input[name=radios]:checked").val() == currentGame.correctAnswer) {
       $('.status li:nth-child(' + music + ')').find('i').css('color', 'green');
+      $('.titleother').html('<h1>Correct!</h1>');
+      $('.titleother h1').css('color', 'green');
+      $('.titleother').removeClass('hide');
     } else {
       $('.status li:nth-child(' + music + ')').find('i').css('color', 'red');
+      $('.titleother').html('<h1>Incorrect!</h1>').css('color', 'red');
+      $('.titleother h1').css('color', 'red');
+      $('.titleother').removeClass('hide');
     }
     $('.status li:nth-child(' + arrow + ')').find('i').css('color', 'blue');
     //disable the submit
@@ -47,7 +53,12 @@ $(document).ready(function() {
     setAnswers();
     $('.next').addClass('hide');
     $('#button6').removeClass('hide');
+    $('.titleother').addClass('hide');
+    stopMusic('#music');
   });
+  /*
+  * Function to play and stop music. Also changes the play button picture and color.
+  */
   $('.playbutton').click(function() {
     if ($('#music').get(0).paused === true) {
       playMusic('#music');
@@ -63,12 +74,10 @@ $(document).ready(function() {
   * Callback function for when json request comes back successfully
   */
   function songsCallBack() {
-    $('.quiz .content').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].lyrics);
     setAnswers();
-    var blah = currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songUrl;
-    $('#music').attr('src', currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songUrl);
   }
   function setAnswers() {
+    $('.quiz .content').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].lyrics);
     for (i = 1; i <= 5; i++) {
       if (i === currentGame.correctAnswer) {
         $('#radio' + i).html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName  + '<br>' +
@@ -80,6 +89,7 @@ $(document).ready(function() {
           currentGame.setcurrentOtherQuestion();
       }
     }
+    $('#music').attr('src', currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songUrl);
   }
 });
 /*
