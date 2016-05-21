@@ -59,6 +59,10 @@ input[type=radio]:checked + label {
   top: 6rem;
   left: 20rem;
 }
+.newGame {
+  top: 13rem;
+  left: 19.5rem;
+}
 h1 {
   color: #66ffff;
   margin-top: 0;

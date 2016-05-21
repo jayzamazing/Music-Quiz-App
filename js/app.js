@@ -41,6 +41,8 @@ $(document).ready(function() {
     //hide next if there are no more questions
     if (currentGame.getCurrentQuestion() != 5) {
       $('.next').removeClass('hide');
+    } else {
+      $('.newGame').removeClass('hide');
     }
     currentGame.setStatus();
     $('.albumpic').css('background-image', 'url("' + currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album + '")');
@@ -58,14 +60,7 @@ $(document).ready(function() {
     game.setQuestionNumbers();
     //show the items on the screen
     setAnswers();
-    $('.next').addClass('hide');
-    $('#button6').removeClass('hide');
-    $('.titleother').addClass('hide');
-    stopMusic('#music');
-    $('.playbutton').find('i').attr("class", "fa fa-play-circle fa-2x");
-    $('.playbutton').find('i').css("color", "green");
-    $('.albumpic').addClass('hide');
-    $('.singername').addClass('hide');
+    resetInGame();
   });
   /*
   * Function to play and stop music. Also changes the play button picture and color.
@@ -81,6 +76,25 @@ $(document).ready(function() {
       $('.playbutton').find('i').css("color", "green");
     }
   });
+  $('.newGame').click(function() {
+    /* initialize game  */
+    currentGame = new newGame(songsCallBack);
+    /* set main question number */
+    game.setQuestionNumbers();
+    //hide and change changed elements back to original
+    resetInGame();
+    $('.newGame').addClass('hide');
+  });
+  function resetInGame() {
+    $('.next').addClass('hide');
+    $('#button6').removeClass('hide');
+    $('.titleother').addClass('hide');
+    stopMusic('#music');
+    $('.playbutton').find('i').attr("class", "fa fa-play-circle fa-2x");
+    $('.playbutton').find('i').css("color", "green");
+    $('.albumpic').addClass('hide');
+    $('.singername').addClass('hide');
+  }
   /*
   * Callback function for when json request comes back successfully
   */
