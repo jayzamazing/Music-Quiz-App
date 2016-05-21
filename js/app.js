@@ -84,6 +84,7 @@ $(document).ready(function() {
     //hide and change changed elements back to original
     resetInGame();
     $('.newGame').addClass('hide');
+    $('.status li i').css('color', 'grey');
   });
   function resetInGame() {
     $('.next').addClass('hide');
