@@ -48,12 +48,25 @@ $(document).ready(function() {
     $('.next').addClass('hide');
     $('#button6').removeClass('hide');
   });
+  $('.playbutton').click(function() {
+    if ($('#music').get(0).paused === true) {
+      playMusic('#music');
+      $('.playbutton').find('i').attr("class", "fa fa-stop-circle-o fa-2x");
+      $('.playbutton').find('i').css("color", "red");
+    } else {
+      stopMusic('#music');
+      $('.playbutton').find('i').attr("class", "fa fa-play-circle fa-2x");
+      $('.playbutton').find('i').css("color", "green");
+    }
+  });
   /*
   * Callback function for when json request comes back successfully
   */
   function songsCallBack() {
-    $('.quiz .content').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion() + 1].lyrics);
+    $('.quiz .content').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].lyrics);
     setAnswers();
+    var blah = currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songUrl;
+    $('#music').attr('src', currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songUrl);
   }
   function setAnswers() {
     for (i = 1; i <= 5; i++) {
@@ -142,3 +155,17 @@ Game.prototype.getSongInfo = function(callback) {
 Game.prototype.setQuestionNumbers = function() {
   this.correctAnswer = parseInt(Math.random() * (5 - 1 + 1) + 1);
 };
+/*
+* Function to play music
+*/
+function playMusic (music) {
+  $(music)[0].volume = 0.5;
+  $(music)[0].load();
+  $(music)[0].play();
+}
+/*
+* Function to stop music
+*/
+function stopMusic (music) {
+  $(music)[0].pause();
+}
