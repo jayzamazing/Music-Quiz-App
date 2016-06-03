@@ -2,7 +2,7 @@
 var express = require('express');
 var app = express();
 var req = require('request');
-var spotifyToken;//store the token once authenticated
+var spotifyToken, categories, playList;
 app.use('static', express.static(__dirname));//set the base directory to find resources
 /*
 * Function that gets initialized when navigating to base url, sends back index.html
@@ -38,7 +38,37 @@ function getToken() {
   //post to spotify requesting token
   req.post(authOptions, function(error, response, body) {
   if (!error && response.statusCode === 200) {//if status 200
-    spotifyToken = body.access_token;
+    //spotifyToken = body.access_token;//store token
+    //getCategories(spotifyToken, 'pop');
+    //getPlayList(spotifyToken, 'spotify', '5FJXhjdILmRA2z5bvz4nzf');
   }
+  });
+}
+function getCategories(spotifyToken, category) {
+  var searchInfo = {
+    url: 'https://api.spotify.com/v1/browse/categories/' + category + '/playlists',
+    headers: {
+      'Authorization': 'Bearer ' + spotifyToken
+    }
+  };
+  req.get(searchInfo, function(error, response, body) {
+    if (!error && response.statusCode === 200) {//if status 200
+      categories = body;
+      console.log(categories);
+    }
+  });
+}
+function getPlayList(spotifyToken, user, playListId) {
+  var searchInfo = {
+    url: 'https://api.spotify.com/v1/users/' + user + '/playlists/' + playListId,
+    headers: {
+      'Authorization': 'Bearer ' + spotifyToken
+    }
+  };
+  req.get(searchInfo, function(error, response, body) {
+    if (!error && response.statusCode === 200) {//if status 200
+       playList = body;
+       console.log(playList);
+    }
   });
 }
