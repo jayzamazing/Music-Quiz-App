@@ -8,8 +8,7 @@ app.use('static', express.static(__dirname));//set the base directory to find re
 * Function that gets initialized when navigating to base url, sends back index.html
 * and gets authentication token from spotify
 */
-app.get('/', function (request, response) {
-  getToken();
+app.get('/', getToken, function (request, response) {
   response.sendFile(__dirname + '/index.html');
 });
 /*
@@ -21,34 +20,40 @@ listener = app.listen(process.env.PORT, function () {
 /*
 * Function to get client credentials token from spotify
 */
-function getToken() {
-  /*
-  * Authentication options used by spotify api for client credentials work flow
-  */
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer(process.env.client_id + ':' + process.env.client_secret).toString('base64'))
-    },
-    form: {
-      grant_type: 'client_credentials'
-    },
-    json: true
-  };
-  //post to spotify requesting token
-  req.post(authOptions, function(error, response, body) {
-  if (!error && response.statusCode === 200) {//if status 200
-    spotifyToken = body.access_token;//store token
-    //getCategories(spotifyToken, 'pop');
-    getPlayList(spotifyToken, 'spotify', '5FJXhjdILmRA2z5bvz4nzf');
+function getToken(request, response, next) {
+  var time = new Date();
+  if (spotifyToken === undefined || spotifyToken.expires_on <= (Date.now() / 1000.0)) {
+    /*
+    * Authentication options used by spotify api for client credentials work flow
+    */
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer(process.env.client_id + ':' + process.env.client_secret).toString('base64'))
+      },
+      form: {
+        grant_type: 'client_credentials'
+      },
+      json: true
+    };
+    //post to spotify requesting token
+    req.post(authOptions, function(error, response, body) {
+    if (!error && response.statusCode === 200) {//if status 200
+      spotifyToken = {token : body.access_token, expires_on : (Date.now() / 1000.0) + body.expires_in};//store token
+      //getCategories(spotifyToken, 'pop');   //TODO remove to own calls
+      //getPlayList(spotifyToken, 'spotify', '5FJXhjdILmRA2z5bvz4nzf');
+      console.log(spotifyToken.expires_on);
+    }
+    });
   }
-  });
+  //console.log(time.getSeconds());
+  next();
 }
 function getCategories(spotifyToken, category) {
   var searchInfo = {
     url: 'https://api.spotify.com/v1/browse/categories/' + category + '/playlists',
     headers: {
-      'Authorization': 'Bearer ' + spotifyToken
+      'Authorization': 'Bearer ' + spotifyToken.token
     }
   };
   req.get(searchInfo, function(error, response, body) {
@@ -71,7 +76,7 @@ function getPlayList(spotifyToken, user, playListId) {
   var searchInfo = {
     url: 'https://api.spotify.com/v1/users/' + user + '/playlists/' + playListId,
     headers: {
-      'Authorization': 'Bearer ' + spotifyToken
+      'Authorization': 'Bearer ' + spotifyToken.token
     }
   };
   req.get(searchInfo, function(error, response, body) {
