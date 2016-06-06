@@ -4,7 +4,7 @@ var app = express();
 var req = require('request');
 var auto = require('run-auto');
 var spotifyToken, categories = [], playList = [];
-app.use('static', express.static(__dirname));//set the base directory to find resources
+app.use('/static', express.static(__dirname));//set the base directory to find resources
 /*
 * Function that gets initialized when navigating to base url. This function initially
 * gets the token from spotify.
