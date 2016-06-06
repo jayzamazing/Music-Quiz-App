@@ -17,7 +17,6 @@ app.get('/', function(request, response) {
       getToken(function(token) {
         callback(null, token);
       });
-
     },
   },
     function(err, results) {
@@ -34,12 +33,13 @@ app.get('/getMusic', function (request, response) {
       getToken(function(token) {
         callback(null, token);
       });
-
     },
     category: ['token', function(results, callback) {
       console.log('trying to get categories');
       request.category = 'pop';
-      getCategories(request, response, results.token);
+      getCategories(request, response, function(cat) {
+        callback(null, cat);
+      });
       callback(null, 'category', 'got categories');
     }]
   },
@@ -76,50 +76,58 @@ function getToken(callback) {
       },
       json: true
     };
-
     auto({
       postToken: function(callback) {
         req.post(authOptions, function(error, response, body) {
           if (!error && response.statusCode === 200) {//if status 200
             spotifyToken = {token : body.access_token, expires_on : (Date.now() / 1000.0) + body.expires_in};//store token
-            // console.log(spotifyToken.token);
-            callback(null, spotifyToken.token);
+            callback(null, 'have token');
           }
         });
-
       }
     },
       function(err, results) {
         console.log('err = ', err);
         console.log('results = ', results);
-        return callback(results.postToken);
+        callback(results);
     });
   }
 }
-function getCategories(request, response, token) {
+function getCategories(request, response, callback) {
   console.log('inside categories');
   var searchInfo = {
     url: 'https://api.spotify.com/v1/browse/categories/' + request.category + '/playlists',
     headers: {
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + spotifyToken.token
     }
   };
-  req.get(searchInfo, function(error, response, body) {
-    if (!error && response.statusCode === 200) {//if status 200
-      categories = JSON.parse(body);
-      categories = categories.playlists.items.filter(function(item) {
-        if (item.tracks.total > 50)//minimum number of songs needed for quiz with space for null values
-          return item;
-      })
-      .map(function(obj) {
-          var temp = {};
-          temp[obj.name] = obj.id;
-          return temp;
-        });
-        console.log(categories);
+  auto({
+    getCat: function(callback) {
+      req.get(searchInfo, function(error, response, body) {
+        if (!error && response.statusCode === 200) {//if status 200
+          categories = JSON.parse(body);
+          categories = categories.playlists.items.filter(function(item) {
+            if (item.tracks.total > 50)//minimum number of songs needed for quiz with space for null values
+              return item;
+          })
+          .map(function(obj) {
+              var temp = {};
+              temp[obj.name] = obj.id;
+              return temp;
+            });
+          callback(null, categories);
+        }
+      });
     }
+  },
+    function(err, results) {
+      console.log('err = ', err);
+      console.log('results = ', results);
+      callback(results);
   });
-  //TODO randomize and choose playlist
+}
+function randomizer(number) {
+  return parseInt(Math.random() * (number));
 }
 function getPlayList(request, response, next) {
   var searchInfo = {

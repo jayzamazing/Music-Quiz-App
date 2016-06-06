@@ -193,7 +193,7 @@ Game.prototype.getSongInfo = function(callback) {
 * current question
 */
 Game.prototype.setQuestionNumbers = function() {
-  this.correctAnswer = parseInt(Math.random() * (5 - 1 + 1) + 1);
+  this.correctAnswer = parseInt(Math.random() * (5) + 1);
 };
 /*
 * Function to play music
