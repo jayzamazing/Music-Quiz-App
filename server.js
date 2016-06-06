@@ -19,9 +19,7 @@ app.get('/', function(request, response) {
       });
     },
   },
-    function(err, results) {
-    console.log('err = ', err);
-    console.log('results = ', results);
+    function() {
     response.sendFile(__dirname + '/index.html');
   });
 });
@@ -40,12 +38,16 @@ app.get('/getMusic', function (request, response) {
       getCategories(request, response, function(cat) {
         callback(null, cat);
       });
-      callback(null, 'category', 'got categories');
+    }],
+    playlist: ['token', 'category', function(results, callback) {
+      console.log('trying to get playlist');
+      request.playListId = categories[randomizer(categories.length)].playlistid;
+      getPlayList(request, response, function(list) {
+        callback(null, list);
+      });
     }]
   },
-    function(err, results) {
-    console.log('err = ', err);
-    console.log('results = ', results);
+    function() {
     response.sendFile(__dirname + '/index.html');
   });
 });
@@ -61,7 +63,6 @@ listener = app.listen(process.env.PORT, getToken, function () {
 function getToken(callback) {
   var time = new Date();
   if (spotifyToken === undefined || spotifyToken.expires_on <= (Date.now() / 1000.0)) {
-    console.log('token');
     spotifyToken = undefined;
     /*
     * Authentication options used by spotify api for client credentials work flow
@@ -81,9 +82,20 @@ function getToken(callback) {
         req.post(authOptions, function(error, response, body) {
           if (!error && response.statusCode === 200) {//if status 200
             spotifyToken = {token : body.access_token, expires_on : (Date.now() / 1000.0) + body.expires_in};//store token
-            callback(null, 'have token');
+            callback(null, spotifyToken.token);
           }
         });
+      }
+    },
+      function(err, results) {
+        console.log('err = ', err);
+        console.log('results = ', results);
+        callback(results);
+    });
+  } else {
+    auto({
+      haveToken: function(callback) {
+        callback(null, spotifyToken.token);
       }
     },
       function(err, results) {
@@ -94,7 +106,6 @@ function getToken(callback) {
   }
 }
 function getCategories(request, response, callback) {
-  console.log('inside categories');
   var searchInfo = {
     url: 'https://api.spotify.com/v1/browse/categories/' + request.category + '/playlists',
     headers: {
@@ -111,8 +122,7 @@ function getCategories(request, response, callback) {
               return item;
           })
           .map(function(obj) {
-              var temp = {};
-              temp[obj.name] = obj.id;
+              var temp = {playlistName: obj.name, playlistid: obj.id};
               return temp;
             });
           callback(null, categories);
@@ -129,30 +139,38 @@ function getCategories(request, response, callback) {
 function randomizer(number) {
   return parseInt(Math.random() * (number));
 }
-function getPlayList(request, response, next) {
+function getPlayList(request, response, callback) {
   var searchInfo = {
-    url: 'https://api.spotify.com/v1/users/spotify/playlists/' + request.playListId,//TODO get playlist from request
+    url: 'https://api.spotify.com/v1/users/spotify/playlists/' + request.playListId,
     headers: {
       'Authorization': 'Bearer ' + spotifyToken.token
     }
   };
-  req.get(searchInfo, function(error, response, body) {
-    if (!error && response.statusCode === 200) {//if status 200
-       playList = JSON.parse(body);
-       playList = playList.tracks.items.filter(function(item) {
-         //ensure all values are not null
-         if (item.track.name && item.track.preview_url && item.track.artists[0].name && item.track.album.images[2].url){
-           return item;
-         }
-       })
-       .map(function(item) {
-         var temp = {};
-         temp[item.track.name] = [item.track.preview_url,
-           item.track.artists[0].name, item.track.album.images[2].url];
-         return temp;
-       });
-       console.log(playList);
+  auto({
+    getlist: function(callback) {
+      req.get(searchInfo, function(error, response, body) {
+        if (!error && response.statusCode === 200) {//if status 200
+           playList = JSON.parse(body);
+           playList = playList.tracks.items.filter(function(item) {
+             //ensure all values are not null
+             if (item.track.name && item.track.preview_url && item.track.artists[0].name && item.track.album.images[2].url){
+               return item;
+             }
+           })
+           .map(function(item) {
+             //var temp = {playlistName: obj.name, playlistid: obj.id};
+             var temp = {trackname: item.track.name, preview_url: item.track.preview_url, artistname: item.track.artists[0].name,
+             albumimage: item.track.album.images[2].url};
+             return temp;
+           });
+           callback(null, playList);
+        }
+      });
     }
+  },
+    function(err, results) {
+      console.log('err = ', err);
+      console.log('results = ', results);
+      callback(results);
   });
-  next();
 }
