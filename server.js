@@ -2,27 +2,67 @@
 var express = require('express');
 var app = express();
 var req = require('request');
+var auto = require('run-auto');
 var spotifyToken, categories = [], playList = [];
 app.use('static', express.static(__dirname));//set the base directory to find resources
 /*
 * Function that gets initialized when navigating to base url, sends back index.html
 * and gets authentication token from spotify
 */
-app.get('/', getToken, function (request, response) {
-  response.sendFile(__dirname + '/index.html');
+app.get('/', function(request, response) {
+  request.category = 'pop';
+  auto({
+    token: function(callback) {
+      console.log('trying to get token');
+      getToken(function(token) {
+        callback(null, token);
+      });
+
+    },
+  },
+    function(err, results) {
+    console.log('err = ', err);
+    console.log('results = ', results);
+    response.sendFile(__dirname + '/index.html');
+  });
+});
+//pop, rock, rap, ???? TODO
+app.get('/getMusic', function (request, response) {
+  auto({
+    token: function(callback) {
+      console.log('trying to get token');
+      getToken(function(token) {
+        callback(null, token);
+      });
+
+    },
+    category: ['token', function(results, callback) {
+      console.log('trying to get categories');
+      request.category = 'pop';
+      getCategories(request, response, results.token);
+      callback(null, 'category', 'got categories');
+    }]
+  },
+    function(err, results) {
+    console.log('err = ', err);
+    console.log('results = ', results);
+    response.sendFile(__dirname + '/index.html');
+  });
 });
 /*
 * Start up node and listen on a specified port
 */
-listener = app.listen(process.env.PORT, function () {
+listener = app.listen(process.env.PORT, getToken, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 /*
 * Function to get client credentials token from spotify
 */
-function getToken(request, response, next) {
+function getToken(callback) {
   var time = new Date();
   if (spotifyToken === undefined || spotifyToken.expires_on <= (Date.now() / 1000.0)) {
+    console.log('token');
+    spotifyToken = undefined;
     /*
     * Authentication options used by spotify api for client credentials work flow
     */
@@ -36,24 +76,32 @@ function getToken(request, response, next) {
       },
       json: true
     };
-    //post to spotify requesting token
-    req.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {//if status 200
-      spotifyToken = {token : body.access_token, expires_on : (Date.now() / 1000.0) + body.expires_in};//store token
-      //getCategories(spotifyToken, 'pop');   //TODO remove to own calls
-      //getPlayList(spotifyToken, 'spotify', '5FJXhjdILmRA2z5bvz4nzf');
-      console.log(spotifyToken.expires_on);
-    }
+
+    auto({
+      postToken: function(callback) {
+        req.post(authOptions, function(error, response, body) {
+          if (!error && response.statusCode === 200) {//if status 200
+            spotifyToken = {token : body.access_token, expires_on : (Date.now() / 1000.0) + body.expires_in};//store token
+            // console.log(spotifyToken.token);
+            callback(null, spotifyToken.token);
+          }
+        });
+
+      }
+    },
+      function(err, results) {
+        console.log('err = ', err);
+        console.log('results = ', results);
+        return callback(results.postToken);
     });
   }
-  //console.log(time.getSeconds());
-  next();
 }
-function getCategories(spotifyToken, category) {
+function getCategories(request, response, token) {
+  console.log('inside categories');
   var searchInfo = {
-    url: 'https://api.spotify.com/v1/browse/categories/' + category + '/playlists',
+    url: 'https://api.spotify.com/v1/browse/categories/' + request.category + '/playlists',
     headers: {
-      'Authorization': 'Bearer ' + spotifyToken.token
+      'Authorization': 'Bearer ' + token
     }
   };
   req.get(searchInfo, function(error, response, body) {
@@ -71,10 +119,11 @@ function getCategories(spotifyToken, category) {
         console.log(categories);
     }
   });
+  //TODO randomize and choose playlist
 }
-function getPlayList(spotifyToken, user, playListId) {
+function getPlayList(request, response, next) {
   var searchInfo = {
-    url: 'https://api.spotify.com/v1/users/' + user + '/playlists/' + playListId,
+    url: 'https://api.spotify.com/v1/users/spotify/playlists/' + request.playListId,//TODO get playlist from request
     headers: {
       'Authorization': 'Bearer ' + spotifyToken.token
     }
@@ -97,4 +146,5 @@ function getPlayList(spotifyToken, user, playListId) {
        console.log(playList);
     }
   });
+  next();
 }
