@@ -1,10 +1,11 @@
 $(document).ready(function() {
   var currentGame;
+  $('.introdution').append(Handlebars.templates.intro);
   /*
   * game initialization once start game button is pressed
   * hide initial items and show game items
   */
-  $('#startGame').submit(function(e) {
+  $('form').on('submit', function(e) {
     var genreChecked = $('.genre input:checked').val();
     if (genreChecked) {
       /*  hide introduction and show game items */
