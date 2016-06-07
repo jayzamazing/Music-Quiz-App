@@ -1,6 +1,6 @@
 $(document).ready(function() {
   var currentGame;
-  $('.introdution').append(Handlebars.templates.intro);
+  $('.introdution').append(Handlebars.templates.intro);//TODO uncomment later
   /*
   * game initialization once start game button is pressed
   * hide initial items and show game items
@@ -15,10 +15,10 @@ $(document).ready(function() {
       // $('.introduction').addClass('hide');
       // $('.musicPlaceholder').addClass('musicImage');
       // $('.titleScreen h1').addClass('titleAnimation');
-      /* initialize game  */
 
+      /* initialize game  */
       currentGame = new newGame(songsCallBack, $('.genre input:checked').val());
-      //console.log($('.genre input:checked').val());
+      $('.introdution').html('');
     }
     e.preventDefault();
   });

@@ -13,6 +13,14 @@ body {
     margin: 10px;
     text-shadow: 2px 2px 3px #0D47A1;
 }
+.artists label {
+  width: 30rem;
+  height: 10rem;
+  margin-bottom: 1rem;
+}
+.artists {
+  width: 61rem;
+}
 .genre label {
     width: 8rem;
 }
@@ -26,6 +34,16 @@ body {
     float: none;
     margin: 0 auto;
 }
+h2 {
+    opacity: 0.87;
+}
 h3 {
-    opacity: 0.54;
+  opacity: 0.54
+}
+.artistinfo, .quiz {
+  text-align: center;
+}
+.glyphicon {
+    font-size: 5rem;
+    color: green;
 }
