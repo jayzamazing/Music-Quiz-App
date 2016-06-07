@@ -6,16 +6,23 @@ $(document).ready(function() {
   */
   $('#startGame').submit(function(e) {
     /*  hide introduction and show game items */
-    $('.status').removeClass('hide');
-    $('.question').removeClass('hide');
-    $('.quiz').removeClass('hide');
-    $('.introduction').addClass('hide');
-    $('.musicPlaceholder').addClass('musicImage');
-    $('.titleScreen h1').addClass('titleAnimation');
+    // $('.status').removeClass('hide');
+    // $('.question').removeClass('hide');
+    // $('.quiz').removeClass('hide');
+    // $('.introduction').addClass('hide');
+    // $('.musicPlaceholder').addClass('musicImage');
+    // $('.titleScreen h1').addClass('titleAnimation');
     /* initialize game  */
     currentGame = new newGame(songsCallBack);
     //console.log($('.genre input:checked').val());
     e.preventDefault();
+  });
+  //Function to show which genre is active on the page
+  $('.genre label').on('click', function(e) {
+    $('.genre label').each(function() {
+      $(this).removeClass('active');
+    });
+  $('#' + e.currentTarget.id).addClass('active');
   });
   /*
   * Function to set the status bar, green is passed, red otherwise
