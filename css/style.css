@@ -13,10 +13,7 @@ body {
     margin: 10px;
     text-shadow: 2px 2px 3px #0D47A1;
 }
-button {
-    color: #FFFFFF;
-}
-.genre button {
+.genre label {
     width: 8rem;
 }
 .genre {
@@ -29,9 +26,6 @@ button {
     float: none;
     margin: 0 auto;
 }
-.btn {
-    background-color: #2196F3;
-}
 h3 {
-    opacity: 0.87;
+    opacity: 0.54;
 }

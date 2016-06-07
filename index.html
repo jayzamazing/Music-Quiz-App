@@ -20,12 +20,22 @@
             <br>
             <div class="row">
                 <form action="" id="startGame" class="submitForm">
-                    <div class="btn-toolbar genre col-centered ">
-                        <button class="btn btndefault" value="pop">Pop</button>
-                        <button class="btn btndefault" value="rock">Rock</button>
-                        <button class="btn btndefault" value="hiphop">Hip Hop</button>
-                        <button class="btn btndefault" value="rnb">RnB</button>
-                        <button class="btn btndefault" value="country">Country</button>
+                    <div class="btn-toolbar genre col-centered" data-toggle="buttons">
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" autocomplete="off" value="pop">Pop
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" autocomplete="off" value="rock">Rock
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" autocomplete="off" value="hiphop">Hip Hop
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" autocomplete="off" value="rnb">R&#38;B
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" autocomplete="off" value="country">Country
+                        </label>
                     </div>
             </div>
             <div class="row">
@@ -38,6 +48,8 @@
         </div>
     </section>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/js/bootstrap.min.js" />
     <script src="js/app.js"></script>
 </body>
+
 </html>

@@ -14,6 +14,7 @@ $(document).ready(function() {
     $('.titleScreen h1').addClass('titleAnimation');
     /* initialize game  */
     currentGame = new newGame(songsCallBack);
+    //console.log($('.genre input:checked').val());
     e.preventDefault();
   });
   /*
