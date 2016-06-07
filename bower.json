@@ -1,0 +1,21 @@
+{
+  "name": "music-quiz-app",
+  "description": "Interactive quiz app",
+  "main": "index.html",
+  "authors": [
+    "Adrian J Lopez"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "html",
+    "css",
+    "javascript",
+    "jquery"
+  ],
+  "homepage": "https://github.com/jayzamazing/Music-Quiz-App",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "font-awesome": "^4.6.3"
+  }
+}
