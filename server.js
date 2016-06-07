@@ -26,6 +26,7 @@ app.get('/', function(request, response) {
 /*
 * Function that gets called when /getMusic is called. Initially tries to get token,
 * calls category, and finally playlist.
+* @require request.category = 'pop';
 * @return response.playlist
 */
 app.get('/getMusic', function (request, response) {
@@ -46,10 +47,23 @@ app.get('/getMusic', function (request, response) {
       console.log('trying to get playlist');
       request.playListId = categories[randomizer(categories.length)].playlistid;
       getPlayList(request, response, function(list) {
+        response.playlist = list;
         callback(null, list);
       });
     }]
   });
+  response.end();
+});
+app.get('/getLyrics', function(request, response) {
+  auto({
+    lyrics: function(callback) {
+      console.log('trying to get lyrics');
+      getLyrics(request, response, function(lyric) {
+        callback(null, lyric);
+      });
+    }
+  });
+  response.end();
 });
 /*
 * Start up node and listen on a specified port
@@ -177,12 +191,10 @@ function getPlayList(request, response, callback) {
            })
            //create map of information needed
            .map(function(item) {
-             //var temp = {playlistName: obj.name, playlistid: obj.id};
-             var temp = {trackname: item.track.name, preview_url: item.track.preview_url, artistname: item.track.artists[0].name,
+             var temp = {songName: item.track.name, songUrl: item.track.preview_url, songArtist: item.track.artists[0].name,
              albumimage: item.track.album.images[2].url};
              return temp;
            });
-           response.playlist = playList;
            callback(null, playList);
         }
       });
@@ -193,4 +205,27 @@ function getPlayList(request, response, callback) {
       console.log('results = ', results);
       callback(results);
   });
+}
+/*
+* Function to get the lyrics from musixmatch.
+* @require request.songName = 'Same Old Love';request.songArtist = 'Selena Gomez';
+* @return lyrics
+*/
+function getLyrics(request, response, callback) {
+
+  var searchInfo = {
+    url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.songName + '&q_artist=' + request.songArtist
+  };
+  auto({
+    getLyrics: function(callback){
+        req.get(searchInfo, function(error, response, body) {
+          lyrics = JSON.parse(body);
+          callback(null, lyrics.message.body.lyrics.lyrics_body);
+        });
+    }
+  }, function(err, results) {
+    console.log('err = ', err);
+    console.log('results = ', results);
+    callback(results);
+});
 }
