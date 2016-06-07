@@ -4,7 +4,7 @@ var app = express();
 var req = require('request');
 var auto = require('run-auto');
 var spotifyToken, categories = [], playList = [];
-app.use('/static', express.static(__dirname));//set the base directory to find resources
+app.use(express.static(__dirname + '/'));//set the base directory to find resources
 /*
 * Function that gets initialized when navigating to base url. This function initially
 * gets the token from spotify.
@@ -26,7 +26,6 @@ app.get('/', function(request, response) {
 /*
 * Function that gets called when /getMusic is called. Initially tries to get token,
 * calls category, and finally playlist.
-* @require request.category = 'pop';
 * @return response.playlist
 */
 app.get('/getMusic', function (request, response) {
@@ -47,23 +46,20 @@ app.get('/getMusic', function (request, response) {
       console.log('trying to get playlist');
       request.playListId = categories[randomizer(categories.length)].playlistid;
       getPlayList(request, response, function(list) {
-        response.playlist = list;
-        callback(null, list);
+        callback(null, response.send(list));
       });
     }]
   });
-  response.end();
 });
 app.get('/getLyrics', function(request, response) {
   auto({
     lyrics: function(callback) {
       console.log('trying to get lyrics');
       getLyrics(request, response, function(lyric) {
-        callback(null, lyric);
+        callback(null, response.send(lyric));
       });
     }
   });
-  response.end();
 });
 /*
 * Start up node and listen on a specified port
@@ -124,11 +120,12 @@ function getToken(callback) {
 }
 /*
 * Function to get the categories from the spotify server
+* @require request.category = 'pop';
 */
 function getCategories(request, response, callback) {
   //Url for request along with header
   var searchInfo = {
-    url: 'https://api.spotify.com/v1/browse/categories/' + request.category + '/playlists',
+    url: 'https://api.spotify.com/v1/browse/categories/' + request.query.category + '/playlists',
     headers: {
       'Authorization': 'Bearer ' + spotifyToken.token
     }
@@ -192,7 +189,7 @@ function getPlayList(request, response, callback) {
            //create map of information needed
            .map(function(item) {
              var temp = {songName: item.track.name, songUrl: item.track.preview_url, songArtist: item.track.artists[0].name,
-             albumimage: item.track.album.images[2].url};
+             album: item.track.album.images[2].url};
              return temp;
            });
            callback(null, playList);
@@ -214,7 +211,7 @@ function getPlayList(request, response, callback) {
 function getLyrics(request, response, callback) {
 
   var searchInfo = {
-    url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.songName + '&q_artist=' + request.songArtist
+    url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
   };
   auto({
     getLyrics: function(callback){

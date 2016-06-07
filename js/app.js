@@ -5,16 +5,20 @@ $(document).ready(function() {
   * hide initial items and show game items
   */
   $('#startGame').submit(function(e) {
-    /*  hide introduction and show game items */
-    // $('.status').removeClass('hide');
-    // $('.question').removeClass('hide');
-    // $('.quiz').removeClass('hide');
-    // $('.introduction').addClass('hide');
-    // $('.musicPlaceholder').addClass('musicImage');
-    // $('.titleScreen h1').addClass('titleAnimation');
-    /* initialize game  */
-    currentGame = new newGame(songsCallBack);
-    //console.log($('.genre input:checked').val());
+    var genreChecked = $('.genre input:checked').val();
+    if (genreChecked) {
+      /*  hide introduction and show game items */
+      // $('.status').removeClass('hide');
+      // $('.question').removeClass('hide');
+      // $('.quiz').removeClass('hide');
+      // $('.introduction').addClass('hide');
+      // $('.musicPlaceholder').addClass('musicImage');
+      // $('.titleScreen h1').addClass('titleAnimation');
+      /* initialize game  */
+
+      currentGame = new newGame(songsCallBack, $('.genre input:checked').val());
+      //console.log($('.genre input:checked').val());
+    }
     e.preventDefault();
   });
   //Function to show which genre is active on the page
@@ -133,10 +137,10 @@ $(document).ready(function() {
 /*
 * Initialize game and set game state
 */
-function newGame(songsCallBack) {
+function newGame(songsCallBack, genre) {
   game = new Game();
   /* get list of songs and pass in call back */
-  game.getSongInfo(songsCallBack);
+  game.getSongInfo(songsCallBack, genre);
   /* set main question number */
   game.setQuestionNumbers();
   return game;
@@ -188,12 +192,19 @@ function Game() {
 /*
 * Function to get song data from json
 */
-Game.prototype.getSongInfo = function(callback) {
+Game.prototype.getSongInfo = function(callback, genre) {
   var context = this;
-  $.getJSON("data/songs.json", "context", function(data) {
-    context.songs = data;
-  }).complete(function() {
-    callback();
+  // $.getJSON("data/songs.json", "context", function(data) {
+  //   context.songs = data;
+  // }).complete(function() {
+  //   callback();
+  // });
+  $.ajax({
+    url: '/getMusic',
+    data: {category: genre},
+    type: 'GET'
+  }).done(function(result) {
+    context.songs = result;
   });
 };
 /*
