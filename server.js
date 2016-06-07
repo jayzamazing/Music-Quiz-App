@@ -182,14 +182,14 @@ function getPlayList(request, response, callback) {
            //filter out items with null values
            playList = playList.tracks.items.filter(function(item) {
              //ensure all values are not null
-             if (item.track.name && item.track.preview_url && item.track.artists[0].name && item.track.album.images[2].url){
+             if (item.track.name && item.track.preview_url && item.track.artists[0].name && item.track.album.images[1].url){
                return item;
              }
            })
            //create map of information needed
            .map(function(item) {
              var temp = {songName: item.track.name, songUrl: item.track.preview_url, songArtist: item.track.artists[0].name,
-             album: item.track.album.images[2].url};
+             album: item.track.album.images[1].url};
              return temp;
            });
            callback(null, playList);
