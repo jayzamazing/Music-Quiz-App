@@ -1,202 +1,37 @@
-* {
-  /*outline: red 1px solid;*/
-}
-html, body, ul, div, section, li {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 body {
-  background-image: url('../img/backgroundimage.jpg');
-  background-size:cover;
-  height: 45.938rem;
-  background-position: center bottom;
-  overflow: auto;
-  width: 45rem;
-  margin: auto;
-  color: #b3ccff;
-  background-repeat: no-repeat;
+    color: #000000;
+    background-color: #BBDEFB;
 }
-button, input[type=radio] + label, input {
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  border-radius: 12px;
-  background-color: #003cb3;
-  color: #b3ccff;
-  position: relative;
+.jumbotron {
+    min-width: 100%;
+    height: 200px;
+    background-color: #2196F3;
+    margin-top: 50px;
 }
-#answerForm label {
-  width: 8.4rem;
-  height: 4rem;
-  border: 1px solid black;
+.jumbotron h1 {
+    color: #FFFFFF;
+    margin: 10px;
+    text-shadow: 2px 2px 3px #0D47A1;
 }
-.answer {
-  margin: auto;
-  width: 44rem;
+button {
+    color: #FFFFFF;
 }
-input[type=radio] {
-  display: none;
-  margin:10px;
+.genre button {
+    width: 8rem;
 }
-input[type=radio] + label {
-  display:inline-block;
-  color: #b3ccff;
-  font-size: .8rem;
-  text-align: center;
-  padding-top: 1rem;
+.genre {
+    width: 43rem;
 }
-input[type=radio]:checked + label {
-   background-image: none;
-   background-color: red;
-}
-#radio2, #radio4 {
-  top: 2.5rem;
-}
-#radio3 {
-  top: 5rem;
-}
-#button6 {
-  top: 6rem;
-  left: 20rem;
-}
-.newGame {
-  top: 13rem;
-  left: 19.5rem;
-}
-h1 {
-  color: #66ffff;
-  margin-top: 0;
-  margin-bottom: .1rem;
-}
-.center {
-  margin: auto;
-}
-.content {
-  background-color: #3377ff;
-  border-radius: 25px;
-  border: 1px solid black;
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  width: 22rem;
-  padding: 1rem;
-  height: 7rem;
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-.hide {
-  display: none;
-}
-.submitForm, .description, p {
-  text-align: center;
-}
-.musicPlaceholder {
-  height: 10em;
-  width: 10em;
-}
-.musicImage {
-  border: 2px solid;
-  border-radius: 12px;
-  background-image: url('../img/musicimage.jpg');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
-.title {
-  display: inline-block;
-  margin-top: 1rem;
-  margin-bottom: 0;
-  position: relative;
-  left :12.5rem;
-}
-.titleScreen {
-  display: inline-block;
-  margin-top: 1rem;
-}
-.titleandpic {
-  float: left;
-  width: 43rem;
-}
-.titleother {
-  margin-left: 19rem;
-  width: 20rem;
-}
-.singername {
-  margin-left: 30rem;
-  float: left;
+.genre-submit {
   width: 10rem;
 }
-.albumpic {
-  margin-left: 20rem;
-  width: 7rem;
-  height: 7rem;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-
+.col-centered {
+    float: none;
+    margin: 0 auto;
 }
-.status {
-  width: 2rem;
-  float: right;
+.btn {
+    background-color: #2196F3;
 }
-.status ul {
-  list-style-type: none;
-  display: inline;
-}
-.arrows {
-  margin-left: .5rem;
-}
-.arrows, .status li {
-  color: grey;
-}
-.playbutton {
-  width: 3rem;
-  color: green;
-  float: right;
-  margin-top: 2.8rem;
-  margin-bottom: 2.1rem;
-  padding-left: 1.2rem
-}
-.introsize {
-  width: 22rem;
-}
-.quizsize {
-  width: 25rem;
-}
-.next i {
-  position: relative;
-  color: #003cb3;
-  top: 4.1rem;
-  left: 30rem;
-}
-/*
-* Deals with the rotation, movement, and shrinking of h1
-*/
-.titleAnimation {
-  -webkit-animation: spin 2s linear;
-  -moz-animation: spin 2s linear;
-  -ms-animation: spin 2s linear;
-  animation: spin 2s linear;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
-  -ms-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  }
-@-moz-keyframes spin {
-  0% {-moz-transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}
-  25% {-moz-transform: translatex(-7rem) translatey(-3rem) rotate(-270deg) scale(0.8)}
-  50% {-moz-transform: translatex(-12rem) translatey(-4rem) rotate(-180deg) scale(0.7)}
-  75% {-moz-transform: translatex(-14rem) translatey(-5rem) rotate(-90deg) scale(0.6)}
-  100% {-moz-transform: translatex(-17rem) translatey(-7rem) rotate(-35deg) scale(0.5)}
-}
-@-webkit-keyframes spin {
-  0% {-webkit-transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}
-  25% {-webkit-transform: translatex(-7rem) translatey(-3rem) rotate(-270deg) scale(0.8)}
-  50% {-webkit-transform: translatex(-12rem) translatey(-4rem) rotate(-180deg) scale(0.7)}
-  75% {-webkit-transform: translatex(-14rem) translatey(-5rem) rotate(-90deg) scale(0.6)}
-  100% {-webkit-transform: translatex(-17rem) translatey(-7rem) rotate(-35deg) scale(0.5)}
-}
-@keyframes spin {
-  0% {transform: translatex(-3rem) translatey(-2rem) rotate(-360deg) scale(0.9)}
-  25% {transform: translatex(-7rem) translatey(-3rem) rotate(-270deg) scale(0.8)}
-  50% {transform: translatex(-12rem) translatey(-4rem) rotate(-180deg) scale(0.7)}
-  75% {transform: translatex(-14rem) translatey(-5rem) rotate(-90deg) scale(0.6)}
-  100% {transform: translatex(-17rem) translatey(-7rem) rotate(-35deg) scale(0.5)}
+h3 {
+    opacity: 0.87;
 }
