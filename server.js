@@ -73,27 +73,29 @@ function getToken(callback) {
   var time = new Date();
   //checks if spotifytoken if not defined and the lifetime of the token
   if (spotifyToken === undefined || spotifyToken.expires_on <= (Date.now() / 1000.0)) {
-    spotifyToken = undefined;
-    /*
-    * Authentication options used by spotify api for client credentials work flow
-    */
-    var authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      headers: {
-        'Authorization': 'Basic ' + (new Buffer(process.env.client_id + ':' + process.env.client_secret).toString('base64'))
-      },
-      form: {
-        grant_type: 'client_credentials'
-      },
-      json: true
-    };
     //Function to make the post to spotify for the token
     auto({
       postToken: function(callback) {
+        spotifyToken = undefined;
+        /*
+        * Authentication options used by spotify api for client credentials work flow
+        */
+        var authOptions = {
+          url: 'https://accounts.spotify.com/api/token',
+          headers: {
+            'Authorization': 'Basic ' + (new Buffer(process.env.client_id + ':' + process.env.client_secret).toString('base64'))
+          },
+          form: {
+            grant_type: 'client_credentials'
+          },
+          json: true
+        };
         req.post(authOptions, function(error, response, body) {
           if (!error && response.statusCode === 200) {//if status 200
             spotifyToken = {token : body.access_token, expires_on : (Date.now() / 1000.0) + body.expires_in};//store token
             callback(null, spotifyToken.token);
+          } else { //if failure, try again
+            getToken(callback);
           }
         });
       }
@@ -124,7 +126,7 @@ function getToken(callback) {
 function getCategories(request, response, callback) {
   //Function to get a categories list of specific genre
   auto({
-    getCat: function(callback, getCat) {
+    getCat: function(callback) {
       //Url for request along with header
       var searchInfo = {
         url: 'https://api.spotify.com/v1/browse/categories/' + request.query.category + '/playlists',
@@ -146,8 +148,8 @@ function getCategories(request, response, callback) {
               return temp;
             });
           callback(null, categories);
-        } else {
-          getCat(callback, getCat);
+        } else {//otherwise, try again
+          getCategories(request, response, callback);
         }
       });
     }
@@ -169,7 +171,7 @@ function randomizer(number) {
 function getPlayList(request, response, callback) {
   //Function to get the list of music
   auto({
-    getlist: function(callback, getlist) {
+    getlist: function(callback) {
       request.playListId = categories[randomizer(categories.length)].playlistid;
       //URL and header
       var searchInfo = {
@@ -194,9 +196,11 @@ function getPlayList(request, response, callback) {
              album: item.track.album.images[1].url};
              return temp;
            });
+           //randomize list
+           for(var j, k, i = playList.length; i; j = Math.floor(Math.random() * i), k = playList[--i], playList[i] = playList[j], playList[j] = k);
            callback(null, playList);
-        } else {
-          getlist(callback, getlist);
+        } else {//otherwise try again
+          getPlayList(request, response, callback);
         }
       });
     }
@@ -218,14 +222,14 @@ function getLyrics(request, response, callback) {
     url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
   };
   auto({
-    getLyrics: function(callback, getLyrics){
+    getLyric: function(callback, getLyrics){
       if (!error && response.statusCode === 200) {//if status 200
         req.get(searchInfo, function(error, response, body) {
           lyrics = JSON.parse(body);
           callback(null, lyrics.message.body.lyrics.lyrics_body);
         });
-    } else {
-      getLyrics(callback, getLyrics);
+    } else {//otherwise try again
+      getLyrics(request, response, callback);
     }
   }
   }, function(err, results) {
