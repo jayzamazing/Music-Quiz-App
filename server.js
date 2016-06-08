@@ -44,7 +44,6 @@ app.get('/getMusic', function (request, response) {
     }],
     playlist: ['token', 'category', function(results, callback) {
       console.log('trying to get playlist');
-      request.playListId = categories[randomizer(categories.length)].playlistid;
       getPlayList(request, response, function(list) {
         callback(null, response.send(list));
       });
@@ -120,19 +119,19 @@ function getToken(callback) {
 }
 /*
 * Function to get the categories from the spotify server
-* @require request.category = 'pop';
+* @require request.query.category = 'pop';
 */
 function getCategories(request, response, callback) {
-  //Url for request along with header
-  var searchInfo = {
-    url: 'https://api.spotify.com/v1/browse/categories/' + request.query.category + '/playlists',
-    headers: {
-      'Authorization': 'Bearer ' + spotifyToken.token
-    }
-  };
   //Function to get a categories list of specific genre
   auto({
-    getCat: function(callback) {
+    getCat: function(callback, getCat) {
+      //Url for request along with header
+      var searchInfo = {
+        url: 'https://api.spotify.com/v1/browse/categories/' + request.query.category + '/playlists',
+        headers: {
+          'Authorization': 'Bearer ' + spotifyToken.token
+        }
+      };
       req.get(searchInfo, function(error, response, body) {
         if (!error && response.statusCode === 200) {//if status 200
           categories = JSON.parse(body);
@@ -147,6 +146,8 @@ function getCategories(request, response, callback) {
               return temp;
             });
           callback(null, categories);
+        } else {
+          getCat(callback, getCat);
         }
       });
     }
@@ -163,19 +164,20 @@ function randomizer(number) {
 }
 /*
 * Function to get the playlist using a playListId
-* @return response.playlist
+* @return response.playlist = '5FJXhjdILmRA2z5bvz4nzf';
 */
 function getPlayList(request, response, callback) {
-  //URL and header
-  var searchInfo = {
-    url: 'https://api.spotify.com/v1/users/spotify/playlists/' + request.playListId,
-    headers: {
-      'Authorization': 'Bearer ' + spotifyToken.token
-    }
-  };
   //Function to get the list of music
   auto({
-    getlist: function(callback) {
+    getlist: function(callback, getlist) {
+      request.playListId = categories[randomizer(categories.length)].playlistid;
+      //URL and header
+      var searchInfo = {
+        url: 'https://api.spotify.com/v1/users/spotify/playlists/' + request.playListId,
+        headers: {
+          'Authorization': 'Bearer ' + spotifyToken.token
+        }
+      };
       req.get(searchInfo, function(error, response, body) {
         if (!error && response.statusCode === 200) {//if status 200
            playList = JSON.parse(body);
@@ -193,6 +195,8 @@ function getPlayList(request, response, callback) {
              return temp;
            });
            callback(null, playList);
+        } else {
+          getlist(callback, getlist);
         }
       });
     }
@@ -214,12 +218,16 @@ function getLyrics(request, response, callback) {
     url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
   };
   auto({
-    getLyrics: function(callback){
+    getLyrics: function(callback, getLyrics){
+      if (!error && response.statusCode === 200) {//if status 200
         req.get(searchInfo, function(error, response, body) {
           lyrics = JSON.parse(body);
           callback(null, lyrics.message.body.lyrics.lyrics_body);
         });
+    } else {
+      getLyrics(callback, getLyrics);
     }
+  }
   }, function(err, results) {
     console.log('err = ', err);
     console.log('results = ', results);
