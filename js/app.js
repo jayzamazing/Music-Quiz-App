@@ -121,7 +121,7 @@ $(document).ready(function() {
   */
   function setAnswers() {
     $('.quiz .content').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].lyrics);
-    for (i = 1; i <= 5; i++) {
+    for (i = 1; i <= 4; i++) {
       if (i === currentGame.correctAnswer) {
         $('#radio' + i).html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName  + '<br>' +
           currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist);
@@ -175,11 +175,11 @@ function Game() {
     currentQuestion++;
   };
   this.getansweredCorrectly = function() {
-    return currentQuestion;
+    return answeredCorrectly;
   };
   /* Increment currentQuestion */
   this.setansweredCorrectly = function() {
-    currentQuestion++;
+    answeredCorrectly++;
   };
   /* return bad question count */
   this.getcurrentOtherQuestion = function() {

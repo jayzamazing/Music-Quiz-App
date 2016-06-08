@@ -45,7 +45,8 @@ app.get('/getMusic', function (request, response) {
     playlist: ['token', 'category', function(results, callback) {
       console.log('trying to get playlist');
       getPlayList(request, response, function(list) {
-        callback(null, response.send(list));
+        console.log(list);
+        callback(null, response.send(list.getlist));
       });
     }]
   });
@@ -183,6 +184,8 @@ function getPlayList(request, response, callback) {
       req.get(searchInfo, function(error, response, body) {
         if (!error && response.statusCode === 200) {//if status 200
            playList = JSON.parse(body);
+           //randomize list
+           for(var j, k, i = playList.length; i; j = Math.floor(Math.random() * i), k = playList[--i], playList[i] = playList[j], playList[j] = k);
            //filter out items with null values
            playList = playList.tracks.items.filter(function(item) {
              //ensure all values are not null
@@ -191,14 +194,28 @@ function getPlayList(request, response, callback) {
              }
            })
            //create map of information needed
-           .map(function(item) {
-             var temp = {songName: item.track.name, songUrl: item.track.preview_url, songArtist: item.track.artists[0].name,
-             album: item.track.album.images[1].url};
+           .map(function(item, index) {
+             var temp;
+             temp = JSON.stringify({songName: item.track.name, songUrl: item.track.preview_url, songArtist: item.track.artists[0].name,
+               album: item.track.album.images[1].url});
              return temp;
            });
-           //randomize list
-           for(var j, k, i = playList.length; i; j = Math.floor(Math.random() * i), k = playList[--i], playList[i] = playList[j], playList[j] = k);
-           callback(null, playList);
+           var songDetails = JSON.parse('{"songDetails": [' + playList.filter(function(item, index) {
+             if (index <= 5) {
+              return item;
+            }
+           }) + ']}');
+           var otherSongDetails = JSON.parse('{"otherSongDetails": [' + playList.filter(function(item, index) {
+             if (index > 5 && index <= 25) {
+              return item;
+            }
+           }) + ']}');
+           //join the two lists into one json object to return
+           for (var key in otherSongDetails) {
+             if (otherSongDetails.hasOwnProperty(key))
+             songDetails[key] = otherSongDetails[key];
+           }
+           callback(null, songDetails);
         } else {//otherwise try again
           getPlayList(request, response, callback);
         }
