@@ -1,10 +1,10 @@
 $(document).ready(function() {
   var currentGame;
+  var context = {};
   $('.introdution').append(Handlebars.templates.intro);
-  //Have the server get its token for spotify //TODO uncomment later
+  //Have the server get its token for spotify
   $.ajax({
-    url: '/',
-    data: {category: genre},
+    url: '/index',
     type: 'GET'
   });
   /*
@@ -14,16 +14,8 @@ $(document).ready(function() {
   $('form').on('submit', function(e) {
     var genreChecked = $('.genre input:checked').val();
     if (genreChecked) {
-      /*  hide introduction and show game items */
-      // $('.status').removeClass('hide');
-      // $('.question').removeClass('hide');
-      // $('.quiz').removeClass('hide');
-      // $('.introduction').addClass('hide');
-      // $('.musicPlaceholder').addClass('musicImage');
-      // $('.titleScreen h1').addClass('titleAnimation');
-
       /* initialize game  */
-      currentGame = new newGame(songsCallBack, $('.genre input:checked').val());
+      currentGame = new newGame(songsCallBack, lyricsCallBack, $('.genre input:checked').val());
       $('.introdution').html('');
     }
     e.preventDefault();
@@ -76,7 +68,7 @@ $(document).ready(function() {
   */
   $('.next').click(function() {
     /* set main question number */
-    game.setQuestionNumbers();
+    game.setQuestionNumbers(4);
     //show the items on the screen
     setAnswers();
     resetInGame();
@@ -97,9 +89,9 @@ $(document).ready(function() {
   });
   $('.newGame').click(function() {
     /* initialize game  */
-    currentGame = new newGame(songsCallBack);
+    currentGame = new newGame(songsCallBack, lyricsCallBack, genre);
     /* set main question number */
-    game.setQuestionNumbers();
+    game.setQuestionNumbers(4);
     //hide and change changed elements back to original
     resetInGame();
     $('.newGame').addClass('hide');
@@ -118,22 +110,34 @@ $(document).ready(function() {
   /*
   * Callback function for when json request comes back successfully
   */
-  function songsCallBack() {
+  function songsCallBack(lyricsCallBack) {
     setAnswers();
+    currentGame.getLyrics(lyricsCallBack, currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName,
+    currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist);
+  }
+  /*
+  * Callback function for when json request comes back successfully
+  */
+  function lyricsCallBack() {
+    setLyrics();
+    var template = Handlebars.templates.quiz;
+    $('.introdution').append(template(context));
+  }
+  function setLyrics() {
+    context.lyrics = currentGame.currentSongLyrics;
   }
   /*
   * Function to add artist and album info the the buttons, also sets the lyrics,
   * and the song that can be listened to
   */
   function setAnswers() {
-    $('.quiz .content').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].lyrics);
     for (i = 1; i <= 4; i++) {
       if (i === currentGame.correctAnswer) {
-        $('#radio' + i).html(currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName  + '<br>' +
-          currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist);
+        context['artist' + i] = currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName  + '<br>' +
+          currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist;
       } else {
-        $('#radio' + i).html(currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songName + '<br>' +
-          currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songArtist);
+        context['artist' + i] = currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songName + '<br>' +
+          currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songArtist;
           /* increment count on bad answers */
           currentGame.setcurrentOtherQuestion();
       }
@@ -144,12 +148,12 @@ $(document).ready(function() {
 /*
 * Initialize game and set game state
 */
-function newGame(songsCallBack, genre) {
+function newGame(songsCallBack, lyricsCallBack, genre) {
   game = new Game();
-  /* get list of songs and pass in call back */
-  game.getSongInfo(songsCallBack, genre);
+  /* get list of songs and pass in callback */
+  game.getSongInfo(songsCallBack, lyricsCallBack, genre);
   /* set main question number */
-  game.setQuestionNumbers();
+  game.setQuestionNumbers(4);
   return game;
 }
 /*
@@ -201,43 +205,38 @@ function Game() {
 /*
 * Function to get song data from node server. Node server queries spotify for data.
 */
-Game.prototype.getSongInfo = function(callback, genre) {
-  // var context = this;
-  // $.getJSON("data/songs.json", "context", function(data) {
-  //   context.songs = data;
-  // }).complete(function() {
-  //   callback();
-  // });
+Game.prototype.getSongInfo = function(callback, lyricsCallBack, genre) {
+  var ctx = this;
   $.ajax({
     url: '/getMusic',
     data: {category: genre},
     type: 'GET'
   }).done(function(result) {
-    context.songs = result;
-    callback();
+    ctx.songs = result;
+    callback(lyricsCallBack);
   });
 };
 /*
 * Method to get song lyrics from node server. Node server queries musixmatch for data.
 * Due to access limits, queries are limited on a per call bases.
 */
-Game.prototype.getLyrics = function(callback, song) {
-  var context = this;
+Game.prototype.getLyrics = function(callback, song, artist) {
+  var ctx = this;
   $.ajax({
     url: '/getLyrics',
-    data: {category: song},
+    data: {songName: song, songArtist: artist},
     type: 'GET'
   }).done(function(result) {
-    context.currentSongLyrics = result.getLyric;
+    ctx.currentSongLyrics = result.getLyric;
     callback();
   });
 };
 /*
-* Function to get random number between 1 and 5 as the correct answer to the
+* Function to get random number between 1 and some number as the correct answer to the
 * current question
 */
-Game.prototype.setQuestionNumbers = function() {
-  this.correctAnswer = parseInt(Math.random() * (5) + 1);
+Game.prototype.setQuestionNumbers = function(number) {
+  this.correctAnswer = parseInt(Math.random() * (number) + 1);
 };
 /*
 * Function to play music

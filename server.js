@@ -11,7 +11,7 @@ app.use(express.static(__dirname + '/')); //set the base directory to find resou
  * gets the token from spotify.
  * @return /index.html page
  */
-app.get('/', function(request, response) {
+app.get('/index', function(request, response) {
     auto({
             token: function(callback) {
                 console.log('trying to get token');
@@ -174,7 +174,7 @@ function randomizer(number) {
 }
 /*
  * Function to get the playlist using a playListId
- * @return response.playlist = '5FJXhjdILmRA2z5bvz4nzf';
+ * @require request.playListId = '5FJXhjdILmRA2z5bvz4nzf';
  */
 function getPlayList(request, response, callback) {
     //Function to get the list of music
@@ -245,20 +245,22 @@ function getPlayList(request, response, callback) {
  * @return lyrics
  */
 function getLyrics(request, response, callback) {
-    request.query.songName = 'Same Old Love';
-    request.query.songArtist = 'Selena Gomez';
-    console.log(request.query.songName);
-    console.log(request.query.songArtist);
-    console.log(process.env.apikey);
+  // console.log(process.env.apikey);
+  // console.log(request.query.songName);
+  // console.log(request.query.songArtist);
     var searchInfo = {
         url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
     };
     auto({
             getLyric: function(callback) {
                 req.get(searchInfo, function(error, response, body) {
+                  console.log(response.statusCode);
                   if (!error && response.statusCode === 200) {//if status 200
                     lyrics = JSON.parse(body);
-                    callback(null, lyrics.message.body.lyrics.lyrics_body);
+                    lyrics = lyrics.message.body.lyrics.lyrics_body;
+                    lyrics = lyrics.substr(0, 160);
+                    lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                    callback(null, lyrics);
                   } else {//otherwise, try again
                     getLyrics(request, response, callback);
                   }
