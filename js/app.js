@@ -121,7 +121,7 @@ $(document).ready(function() {
   function lyricsCallBack() {
     setLyrics();
     var template = Handlebars.templates.quiz;
-    $('.introdution').append(template(context));
+    $('.quiz').append(template(context));
   }
   function setLyrics() {
     context.lyrics = currentGame.currentSongLyrics;
@@ -133,11 +133,11 @@ $(document).ready(function() {
   function setAnswers() {
     for (i = 1; i <= 4; i++) {
       if (i === currentGame.correctAnswer) {
-        context['artist' + i] = currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName  + '<br>' +
-          currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist;
+        context['artist' + i] = currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName;
+        context['song' + i] = currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist;
       } else {
-        context['artist' + i] = currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songName + '<br>' +
-          currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songArtist;
+        context['artist' + i] = currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songName;
+        context['song' + i] =  currentGame.songs.otherSongDetails[currentGame.getcurrentOtherQuestion()].songArtist;
           /* increment count on bad answers */
           currentGame.setcurrentOtherQuestion();
       }

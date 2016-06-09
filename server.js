@@ -157,7 +157,8 @@ function getCategories(request, response, callback) {
                             });
                         callback(null, categories);
                     } else { //otherwise, try again
-                        getCategories(request, response, callback);
+                      console.log('bad server response, calling getCategories');
+                      getCategories(request, response, callback);
                     }
                 });
             }
@@ -228,7 +229,8 @@ function getPlayList(request, response, callback) {
                         }
                         callback(null, songDetails);
                     } else { //otherwise try again
-                        getPlayList(request, response, callback);
+                      console.log('bad server response, calling getPlayList');
+                      getPlayList(request, response, callback);
                     }
                 });
             }
@@ -245,9 +247,6 @@ function getPlayList(request, response, callback) {
  * @return lyrics
  */
 function getLyrics(request, response, callback) {
-  // console.log(process.env.apikey);
-  // console.log(request.query.songName);
-  // console.log(request.query.songArtist);
     var searchInfo = {
         url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
     };
@@ -262,9 +261,9 @@ function getLyrics(request, response, callback) {
                     lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
                     callback(null, lyrics);
                   } else {//otherwise, try again
+                    console.log('bad server response, calling getLyrics');
                     getLyrics(request, response, callback);
                   }
-
                 });
             }
         },

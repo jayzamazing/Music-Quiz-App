@@ -27,7 +27,7 @@ body {
 .genre {
     width: 43rem;
 }
-.genre-submit {
+.genre-submit, .artist-submit {
   width: 10rem;
 }
 .col-centered {
@@ -46,4 +46,10 @@ h3 {
 .glyphicon {
     font-size: 5rem;
     color: green;
+}
+.playbutton {
+  margin-top: 4rem;
+}
+.lyricsDiv {
+  margin-bottom: 2rem;
 }
