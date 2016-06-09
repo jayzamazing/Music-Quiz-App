@@ -1,6 +1,12 @@
 $(document).ready(function() {
   var currentGame;
-  $('.introdution').append(Handlebars.templates.intro);//TODO uncomment later
+  $('.introdution').append(Handlebars.templates.intro);
+  //Have the server get its token for spotify //TODO uncomment later
+  $.ajax({
+    url: '/',
+    data: {category: genre},
+    type: 'GET'
+  });
   /*
   * game initialization once start game button is pressed
   * hide initial items and show game items
@@ -154,6 +160,8 @@ function Game() {
   var currentOtherQuestion = 0;
   var answeredCorrectly = 0;
   var status = 0;
+  /* hold song lyrics from server */
+  this.currentSongLyrics = '';
   /* object to hold json query of songs */
   this.songs = [];
   /* Number that has the correct answer for current question */
@@ -191,10 +199,10 @@ function Game() {
   };
 }
 /*
-* Function to get song data from json
+* Function to get song data from node server. Node server queries spotify for data.
 */
 Game.prototype.getSongInfo = function(callback, genre) {
-  var context = this;
+  // var context = this;
   // $.getJSON("data/songs.json", "context", function(data) {
   //   context.songs = data;
   // }).complete(function() {
@@ -206,6 +214,22 @@ Game.prototype.getSongInfo = function(callback, genre) {
     type: 'GET'
   }).done(function(result) {
     context.songs = result;
+    callback();
+  });
+};
+/*
+* Method to get song lyrics from node server. Node server queries musixmatch for data.
+* Due to access limits, queries are limited on a per call bases.
+*/
+Game.prototype.getLyrics = function(callback, song) {
+  var context = this;
+  $.ajax({
+    url: '/getLyrics',
+    data: {category: song},
+    type: 'GET'
+  }).done(function(result) {
+    context.currentSongLyrics = result.getLyric;
+    callback();
   });
 };
 /*
