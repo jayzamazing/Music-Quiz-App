@@ -173,6 +173,11 @@ function getCategories(request, response, callback) {
 function randomizer(number) {
     return parseInt(Math.random() * (number));
 }
+//Function to randomize playlist
+function sortList() {
+  //randomize list
+  for (var j, k, i = playList.length; i; j = Math.floor(Math.random() * i), k = playList[--i], playList[i] = playList[j], playList[j] = k);
+}
 /*
  * Function to get the playlist using a playListId
  * @require request.playListId = '5FJXhjdILmRA2z5bvz4nzf';
@@ -192,14 +197,18 @@ function getPlayList(request, response, callback) {
                 req.get(searchInfo, function(error, response, body) {
                     if (!error && response.statusCode === 200) { //if status 200
                         playList = JSON.parse(body);
-                        //randomize list
-                        for (var j, k, i = playList.length; i; j = Math.floor(Math.random() * i), k = playList[--i], playList[i] = playList[j], playList[j] = k);
+                        sortList();
                         //filter out items with null values
                         playList = playList.tracks.items.filter(function(item) {
+                          try {
                                 //ensure all values are not null
-                                if (item.track.name && item.track.preview_url && item.track.artists[0].name && item.track.album.images[1].url) {
+                                if (item.track.name && item.track.preview_url && item.track.artists && item.track.album.images &&
+                                  item.track.artists[0].name && item.track.album.images[1].url) {
                                     return item;
                                 }
+                              } catch(e) {
+                                console.log('value undefied');
+                              }
                             })
                             //create map of information needed
                             .map(function(item, index) {

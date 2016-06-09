@@ -17,6 +17,7 @@ body {
   width: 30rem;
   height: 10rem;
   margin-bottom: 1rem;
+  white-space: normal;
 }
 .artists {
   width: 61rem;
