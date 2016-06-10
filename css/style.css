@@ -25,6 +25,9 @@ body {
 .genre label {
     width: 8rem;
 }
+.btn-primary, label {
+  background-color: #2196F3;
+}
 .genre {
     width: 43rem;
 }
@@ -44,13 +47,29 @@ h3 {
 .artistinfo, .quiz {
   text-align: center;
 }
-.glyphicon {
-    font-size: 5rem;
-    color: green;
+.lyricsDiv .glyphicon {
+  font-size: 5rem;
+}
+.status .glyphicon {
+  font-size: 2rem;
+  color: #2196F3;
+}
+.status li {
+  display: block;
+}
+.stats {
+  margin-right: 5rem;
 }
 .playbutton {
   margin-top: 4rem;
+  color: green;
 }
 .lyricsDiv {
   margin-bottom: 2rem;
+}
+.next {
+  color: #2196F3;
+}
+.albumpic {
+  width: 300px;
 }

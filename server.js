@@ -207,7 +207,7 @@ function getPlayList(request, response, callback) {
                                     return item;
                                 }
                               } catch(e) {
-                                console.log('value undefied');
+                                console.log('value undefined');
                               }
                             })
                             //create map of information needed

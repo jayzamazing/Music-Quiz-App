@@ -21,8 +21,15 @@ $(document).ready(function() {
     e.preventDefault();
   });
   //Function to show which genre is active on the page
-  $('.genre label').on('click', function(e) {
+  $('.introdution').on('click', '.genre label', function(e) {
     $('.genre label').each(function() {
+      $(this).removeClass('active');
+    });
+  $('#' + e.currentTarget.id).addClass('active');
+  });
+  //Function to show which artist and song is active on the page
+  $('.quiz').on('click', '.artists label', function(e) {
+    $('.artists label').each(function() {
       $(this).removeClass('active');
     });
   $('#' + e.currentTarget.id).addClass('active');
@@ -30,43 +37,43 @@ $(document).ready(function() {
   /*
   * Function to set the status bar, green is passed, red otherwise
   */
-  $('#answerForm').submit(function(e) {
+  $('.quiz').on('submit', '#answerForm', function(e) {
+    e.preventDefault();
     currentGame.setCurrentQuestion();
     var music = currentGame.getStatus() + 1;
     var arrow = music + 1;
+    $('.quiz').html('');
+    context = {};
     //if item checked matches the correct answer for the question
     if ($("input[name=radios]:checked").val() == currentGame.correctAnswer) {
       $('.status li:nth-child(' + music + ')').find('i').css('color', 'green');
-      $('.titleother').html('<h1>Correct!</h1>');
-      $('.titleother h1').css('color', 'green');
-      $('.titleother').removeClass('hide');
+      context.correct = 'Correct!!!!';
+      currentGame.setansweredCorrectly();
     } else {
       $('.status li:nth-child(' + music + ')').find('i').css('color', 'red');
-      $('.titleother').html('<h1>Incorrect!</h1>').css('color', 'red');
-      $('.titleother h1').css('color', 'red');
-      $('.titleother').removeClass('hide');
+      context.correct = 'Wrong Answer!!!!';
     }
+    context.amount = currentGame.getansweredCorrectly();
+    context.max = 5;
+    context.percent = currentGame.getansweredCorrectly() / 5;
     $('.status li:nth-child(' + arrow + ')').find('i').css('color', 'blue');
-    //disable the submit
-    $('#button6').addClass('hide');
-    //hide next if there are no more questions
-    if (currentGame.getCurrentQuestion() != 5) {
-      $('.next').removeClass('hide');
-    } else {
-      $('.newGame').removeClass('hide');
-    }
+    context.artist = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songArtist;
+    context.song = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songName;
+    context.songUrl = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album;
     currentGame.setStatus();
-    $('.albumpic').css('background-image', 'url("' + currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album + '")');
-    $('.albumpic').removeClass('hide');
-    $('.singername').html(currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songName  + '<br>' +
-      currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songArtist);
-    $('.singername').removeClass('hide');
-    e.preventDefault();
+    var template = Handlebars.templates.artist;
+    $('.artistinfo').append(template(context));
+
+    //show next if there are more questions
+    if (currentGame.getCurrentQuestion() != 5) {
+      $('.next-question').append(Handlebars.templates.nextquestion);
+    }
+
   });
   /*
   * Function to load the next set of lyrics and music artists
   */
-  $('.next').click(function() {
+  $('.next').on('click', function() {
     /* set main question number */
     game.setQuestionNumbers(4);
     //show the items on the screen
@@ -76,16 +83,21 @@ $(document).ready(function() {
   /*
   * Function to play and stop music. Also changes the play button picture and color.
   */
-  $('.playbutton').click(function() {
+  $('.quiz').on('click', '.playbutton', function() {
     if ($('#music').get(0).paused === true) {
       playMusic('#music');
-      $('.playbutton').find('i').attr("class", "fa fa-stop-circle-o fa-2x");
-      $('.playbutton').find('i').css("color", "red");
+      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton");
+      $('.playbutton').css("color", "red");
     } else {
       stopMusic('#music');
-      $('.playbutton').find('i').attr("class", "fa fa-play-circle fa-2x");
-      $('.playbutton').find('i').css("color", "green");
+      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton");
+      $('.playbutton').css("color", "green");
     }
+  });
+  //Function to detect when song has stopped playing, resets the playbutton
+  $('#music').on('ended', function() {
+    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton");
+    $('.playbutton').css("color", "green");
   });
   $('.newGame').click(function() {
     /* initialize game  */
