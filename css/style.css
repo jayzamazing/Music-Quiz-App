@@ -47,7 +47,8 @@ h3 {
 .artistinfo, .quiz {
   text-align: center;
 }
-.lyricsDiv .glyphicon {
+.lyricsDiv .glyphicon,
+.next .glyphicon {
   font-size: 5rem;
 }
 .status .glyphicon {

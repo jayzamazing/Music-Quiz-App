@@ -1,7 +1,7 @@
 $(document).ready(function() {
   var currentGame;
   var context = {};
-  $('.introdution').append(Handlebars.templates.intro);
+  $('.main').append(Handlebars.templates.intro);
   //Have the server get its token for spotify
   $.ajax({
     url: '/index',
@@ -16,19 +16,19 @@ $(document).ready(function() {
     if (genreChecked) {
       /* initialize game  */
       currentGame = new newGame(songsCallBack, lyricsCallBack, $('.genre input:checked').val());
-      $('.introdution').html('');
+      $('.main').html('');
     }
     e.preventDefault();
   });
   //Function to show which genre is active on the page
-  $('.introdution').on('click', '.genre label', function(e) {
+  $('.main').on('click', '.genre label', function(e) {
     $('.genre label').each(function() {
       $(this).removeClass('active');
     });
   $('#' + e.currentTarget.id).addClass('active');
   });
   //Function to show which artist and song is active on the page
-  $('.quiz').on('click', '.artists label', function(e) {
+  $('.main').on('click', '.artists label', function(e) {
     $('.artists label').each(function() {
       $(this).removeClass('active');
     });
@@ -37,12 +37,12 @@ $(document).ready(function() {
   /*
   * Function to set the status bar, green is passed, red otherwise
   */
-  $('.quiz').on('submit', '#answerForm', function(e) {
+  $('.main').on('submit', '#answerForm', function(e) {
     e.preventDefault();
     currentGame.setCurrentQuestion();
     var music = currentGame.getStatus() + 1;
     var arrow = music + 1;
-    $('.quiz').html('');
+    $('.main').html('');
     context = {};
     //if item checked matches the correct answer for the question
     if ($("input[name=radios]:checked").val() == currentGame.correctAnswer) {
@@ -62,7 +62,7 @@ $(document).ready(function() {
     context.songUrl = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album;
     currentGame.setStatus();
     var template = Handlebars.templates.artist;
-    $('.artistinfo').append(template(context));
+    $('.main').append(template(context));
 
     //show next if there are more questions
     if (currentGame.getCurrentQuestion() != 5) {
@@ -73,17 +73,15 @@ $(document).ready(function() {
   /*
   * Function to load the next set of lyrics and music artists
   */
-  $('.next').on('click', function() {
+  $('.next-question').on('click', '.next', function() {
     /* set main question number */
     game.setQuestionNumbers(4);
-    //show the items on the screen
-    setAnswers();
     resetInGame();
   });
   /*
   * Function to play and stop music. Also changes the play button picture and color.
   */
-  $('.quiz').on('click', '.playbutton', function() {
+  $('.main').on('click', '.playbutton', function() {
     if ($('#music').get(0).paused === true) {
       playMusic('#music');
       $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton");
@@ -105,19 +103,16 @@ $(document).ready(function() {
     /* set main question number */
     game.setQuestionNumbers(4);
     //hide and change changed elements back to original
-    resetInGame();
-    $('.newGame').addClass('hide');
-    $('.status li i').css('color', 'grey');
+    $('.main').html('');
+    $('.next-question').html('');
+    $('.main').append(Handlebars.templates.intro);
+    context = {};
   });
   function resetInGame() {
-    $('.next').addClass('hide');
-    $('#button6').removeClass('hide');
-    $('.titleother').addClass('hide');
+    $('.main').html('');
+    $('.next-question').html('');
     stopMusic('#music');
-    $('.playbutton').find('i').attr("class", "fa fa-play-circle fa-2x");
-    $('.playbutton').find('i').css("color", "green");
-    $('.albumpic').addClass('hide');
-    $('.singername').addClass('hide');
+    songsCallBack(lyricsCallBack);
   }
   /*
   * Callback function for when json request comes back successfully
@@ -133,7 +128,7 @@ $(document).ready(function() {
   function lyricsCallBack() {
     setLyrics();
     var template = Handlebars.templates.quiz;
-    $('.quiz').append(template(context));
+    $('.main').append(template(context));
   }
   function setLyrics() {
     context.lyrics = currentGame.currentSongLyrics;
