@@ -25,7 +25,9 @@
   "dependencies": {
     "express": "^4.13.4",
     "jquery": "^2.2.3",
+    "musicmatch": "^0.2.5",
     "request": "^2.72.0",
-    "run-auto": "^2.0.0"
+    "run-auto": "^2.0.0",
+    "spotify-web-api-node": "^2.3.0"
   }
 }
