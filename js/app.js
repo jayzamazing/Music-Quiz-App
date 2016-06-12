@@ -234,7 +234,7 @@ Game.prototype.getLyrics = function(callback, song, artist) {
     data: {songName: song, songArtist: artist},
     type: 'GET'
   }).done(function(result) {
-    ctx.currentSongLyrics = result.getLyric;
+    ctx.currentSongLyrics = result;
     callback();
   });
 };
