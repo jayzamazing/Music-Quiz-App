@@ -205,13 +205,13 @@ function getPlayList(request, response, callback, results) {
                   });
               //filter out first 5 playlist objects and set as songdetails
               var songDetails = JSON.parse('{"songDetails": [' + playList.filter(function(item, index) {
-                  if (index <= 5) {
+                  if (index <= 10) {
                       return item;
                   }
               }) + ']}');
               //filter out playlist between 5 and 25 and set as othersongdetails
               var otherSongDetails = JSON.parse('{"otherSongDetails": [' + playList.filter(function(item, index) {
-                  if (index > 5 && index <= 25) {
+                  if (index > 10 && index <= 30) {
                       return item;
                   }
               }) + ']}');

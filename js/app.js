@@ -42,10 +42,9 @@ $(document).ready(function() {
     currentGame.setCurrentQuestion();
     var music = currentGame.getStatus() + 1;
     var arrow = music + 1;
-    $('.main').html('');
     context = {};
     //if item checked matches the correct answer for the question
-    if ($("input[name=radios]:checked").val() == currentGame.correctAnswer) {
+    if ($('input[name=options]:checked').val() == currentGame.correctAnswer) {
       $('.status li:nth-child(' + music + ')').find('i').css('color', 'green');
       context.correct = 'Correct!!!!';
       currentGame.setansweredCorrectly();
@@ -53,9 +52,10 @@ $(document).ready(function() {
       $('.status li:nth-child(' + music + ')').find('i').css('color', 'red');
       context.correct = 'Wrong Answer!!!!';
     }
+    $('.main').html('');
     context.amount = currentGame.getansweredCorrectly();
     context.max = 5;
-    context.percent = currentGame.getansweredCorrectly() / 5;
+    context.percent = currentGame.getansweredCorrectly() / 5 * 100;
     $('.status li:nth-child(' + arrow + ')').find('i').css('color', 'blue');
     context.artist = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songArtist;
     context.song = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songName;
