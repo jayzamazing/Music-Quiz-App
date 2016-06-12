@@ -227,7 +227,7 @@ Game.prototype.getSongInfo = function(callback, lyricsCallBack, genre) {
 * Method to get song lyrics from node server. Node server queries musixmatch for data.
 * Due to access limits, queries are limited on a per call bases.
 */
-Game.prototype.getLyrics = function(callback, song, artist) {
+Game.prototype.getLyrics = function lyrics(callback, song, artist) {
   var ctx = this;
   $.ajax({
     url: '/getLyrics',
@@ -236,6 +236,11 @@ Game.prototype.getLyrics = function(callback, song, artist) {
   }).done(function(result) {
     ctx.currentSongLyrics = result;
     callback();
+  }).error(function(err) { //recursive call to move to next song and try getting those lyrics
+    ctx.setCurrentQuestion();//increment currentquestion
+    //recursive call to lyrics
+    lyrics(callback, currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName,
+    currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist);
   });
 };
 /*

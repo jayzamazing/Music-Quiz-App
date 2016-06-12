@@ -1,9 +1,10 @@
 {
   "name": "music-quiz-app",
   "version": "1.0.0",
-  "description": "Interactive quiz app",
-  "main": "index.html",
+  "description": "Interactive quiz app that gets random music based on genre using the spotify api and musix match api.",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": ""
   },
   "repository": {
@@ -14,7 +15,12 @@
     "html",
     "css",
     "javascript",
-    "jquery"
+    "jquery",
+    "node",
+    "hyperdev",
+    "express",
+    "spotify api",
+    "musix api"
   ],
   "author": "Adrian J Lopez",
   "license": "MIT",
@@ -23,11 +29,16 @@
   },
   "homepage": "https://github.com/jayzamazing/Music-Quiz-App#readme",
   "dependencies": {
+    "bootstrap": "^3.3.6",
     "express": "^4.13.4",
+    "handlebars": "^4.0.5",
     "jquery": "^2.2.3",
     "musicmatch": "^0.2.5",
     "request": "^2.72.0",
     "run-auto": "^2.0.0",
     "spotify-web-api-node": "^2.3.0"
+  },
+  "engines": {
+    "node": "4.4.3"
   }
 }
