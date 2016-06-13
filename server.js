@@ -5,12 +5,6 @@ var app = express();
 var req = require('request');
 var auto = require('run-auto');
 var tokenExpiration = 0;
-//set user token for musicmatch api
-var music = require('musicmatch')({
-    usertoken: process.env.apikey,
-    format: 'json',
-    appid: 'community-app-v1.0'
-});
 
 app.use(express.static(__dirname + '/')); //set the base directory to find resources
 var spotifyApi = new SpotifyWebApi({ //instantiate and set credentials for spotifywebapi
@@ -28,7 +22,7 @@ app.get("/", function (request, response) {
  * gets the token from spotify.
  * @return /index.html page
  */
-app.get('/index', function(request, response) {
+app.get('/getToken', function(request, response) {
     auto({
             //get credentials
             token: function(callback) {
