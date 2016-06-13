@@ -18,6 +18,12 @@ var spotifyApi = new SpotifyWebApi({ //instantiate and set credentials for spoti
     clientSecret: process.env.client_secret
 });
 /*
+* Function to set the first page to load
+*/
+app.get("/", function (request, response) {
+  response.sendFile(__dirname + '/index.html');
+});
+/*
  * Function that gets initialized when navigating to base url. This function initially
  * gets the token from spotify.
  * @return /index.html page
@@ -33,7 +39,6 @@ app.get('/index', function(request, response) {
         function(err, results) {
             console.log('err = ', err);
             console.log('results = ', results);
-            response.sendFile(__dirname + '/index.html');
         }
     );
 });
@@ -152,7 +157,7 @@ function getCategories(request, response, callback) {
               });
               if (err && tries <= 3) {//retry query 3 times
                 tries++;
-                getCategories(callback);//resurcive call to try again
+                getCategories(request, response, callback);//resurcive call to try again
               }
           callback(err, filteredCategories);
       });
@@ -222,7 +227,7 @@ function getPlayList(request, response, callback, results) {
               }
               if (err && tries <= 3) {//retry query 3 times
                 tries++;
-                getPlayList(callback);//resurcive call to try again
+                getPlayList(request, response, callback, results);//resurcive call to try again
               }
               callback(err, songDetails);
           });
@@ -242,29 +247,30 @@ function getPlayList(request, response, callback, results) {
 */
 function getLyrics(request, response, callback) {
   var tries = 0;
+  var searchInfo = {//set songname and artist to search for
+        url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
+  };
   auto({
     lyrics: function(callback) {
-      //set songname and artist to search for and then perform query for lyrics
-      music.matcherLyrics({
-              q_track: request.query.songName,
-              q_artist: request.query.songArtist
-          })
-          .then(function(data) {
-              //take the lyrics and shorten to a max of 160 characters
-              lyrics = data.message.body.lyrics.lyrics_body;
-              lyrics = lyrics.substr(0, 160);
-              //ensure last word is not cut in half
-              lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
-              console.log(lyrics);
-              callback(null, lyrics);
-          })
-          .catch(function(err) {
-            if (tries <= 3) {//retry query 3 times
-              tries++;
-              getLyrics(callback);//resurcive call to try again
-            }
-            callback(err, null);//return error
-          });
+      req.get(searchInfo, function(error, response, body) {
+                  console.log(response.statusCode);
+                  if (!error && response.statusCode === 200) {//if status 200
+                    //take the lyrics and shorten to a max of 160 characters
+                    lyrics = JSON.parse(body);
+                    lyrics = lyrics.message.body.lyrics.lyrics_body;
+                    lyrics = lyrics.substr(0, 160);
+                    //ensure last word is not cut in half
+                    lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                    console.log(lyrics);
+                    callback(null, lyrics);
+                  } else {
+                    if (tries <= 3) {//retry query 3 times
+                      tries++;
+                      getLyrics(request, response, callback);//resurcive call to try again
+                    }
+                    callback('could not get song lyrics', null);//return error
+                  }
+                });
     }
   },
   function(err, results) {
