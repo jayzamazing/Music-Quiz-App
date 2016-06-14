@@ -3,12 +3,26 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Music Quiz App</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?v=1" />
 </head>
 
 <body>
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                  <li><a href="" class="newGame">New Game</a></li>
+              </ul>
+          </div>
+      </div>
+  </nav>
     <header class="container-fluid">
         <div class="jumbotron">
             <h1>Music Quiz App</h1>
@@ -16,18 +30,12 @@
     </header>
     <section class="container main">
     </section>
-    <section class="stats pull-right">
-    </section>
-    <section class="container next-question">
-    </section>
     <audio id="music" src=""></audio>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/handlebars/dist/handlebars.runtime.js"></script>
     <script src="js/templates/artist.js"></script>
     <script src="js/templates/intro.js"></script>
     <script src="js/templates/quiz.js"></script>
-    <script src="js/templates/nextquestion.js"></script>
-    <script src="js/templates/statsbar.js"></script>
     <script src="js/app.js"></script>
 </body>
 

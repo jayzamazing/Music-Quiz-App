@@ -4,7 +4,7 @@ $(document).ready(function() {
   $('.main').append(Handlebars.templates.intro);
   //Have the server get its token for spotify
   $.ajax({
-    url: '/index',
+    url: '/getToken',
     type: 'GET'
   });
   /*
@@ -16,7 +16,8 @@ $(document).ready(function() {
     if (genreChecked) {
       /* initialize game  */
       currentGame = new newGame(songsCallBack, lyricsCallBack, $('.genre input:checked').val());
-      $('.main').html('');
+      $('.main').html('<h3>Please wait</h3>');
+      $('h3').css('text-align', 'center');
     }
     e.preventDefault();
   });
@@ -40,23 +41,23 @@ $(document).ready(function() {
   $('.main').on('submit', '#answerForm', function(e) {
     e.preventDefault();
     currentGame.setCurrentQuestion();
-    var music = currentGame.getStatus() + 1;
-    var arrow = music + 1;
     context = {};
+
     //if item checked matches the correct answer for the question
     if ($('input[name=options]:checked').val() == currentGame.correctAnswer) {
-      $('.status li:nth-child(' + music + ')').find('i').css('color', 'green');
       context.correct = 'Correct!!!!';
       currentGame.setansweredCorrectly();
+      currentGame.setStatusHistory(1);
     } else {
-      $('.status li:nth-child(' + music + ')').find('i').css('color', 'red');
       context.correct = 'Wrong Answer!!!!';
+      currentGame.setStatusHistory(2);
     }
+    currentGame.setStatusHistory(1);
+    setStatus();
     $('.main').html('');
     context.amount = currentGame.getansweredCorrectly();
     context.max = 5;
     context.percent = currentGame.getansweredCorrectly() / 5 * 100;
-    $('.status li:nth-child(' + arrow + ')').find('i').css('color', 'blue');
     context.artist = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songArtist;
     context.song = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].songName;
     context.songUrl = currentGame.songs.songDetails[currentGame.getCurrentQuestion() - 1].album;
@@ -66,14 +67,16 @@ $(document).ready(function() {
 
     //show next if there are more questions
     if (currentGame.getCurrentQuestion() != 5) {
-      $('.next-question').append(Handlebars.templates.nextquestion);
+      $('.next-button').removeClass('hide');
+    } else {
+      $('.newGame').removeClass('hide');
     }
 
   });
   /*
   * Function to load the next set of lyrics and music artists
   */
-  $('.next-question').on('click', '.next', function() {
+  $('.main').on('click', '.next', function() {
     /* set main question number */
     game.setQuestionNumbers(4);
     resetInGame();
@@ -97,22 +100,33 @@ $(document).ready(function() {
     $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton");
     $('.playbutton').css("color", "green");
   });
-  $('.newGame').click(function() {
-    /* initialize game  */
-    currentGame = new newGame(songsCallBack, lyricsCallBack, genre);
-    /* set main question number */
-    game.setQuestionNumbers(4);
+  $('body').on('click', '.newGame', function() {
     //hide and change changed elements back to original
-    $('.main').html('');
-    $('.next-question').html('');
-    $('.main').append(Handlebars.templates.intro);
-    context = {};
+    $('.main').html(Handlebars.templates.intro);
   });
   function resetInGame() {
     $('.main').html('');
-    $('.next-question').html('');
     stopMusic('#music');
     songsCallBack(lyricsCallBack);
+  }
+  /*
+  * Function to handle status bar color changes based on right or
+  * wrong answer history.
+  */
+  function setStatus() {
+    var statHist = currentGame.getStatusHistory();
+    //iterates over the stats history and changes color for each glyphicon
+    for (i = 1; i <= statHist.length; i++) {
+      if (i % 2) {
+        if (statHist[i - 1] === 1) {
+          $('.stats li:nth-child(' + i + ')').find('i').css('color', 'green');
+        } else {
+          $('.stats li:nth-child(' + i + ')').find('i').css('color', 'red');
+        }
+      } else {
+        $('.status li:nth-child(' + i + ')').find('i').css('color', 'blue');
+      }
+    }
   }
   /*
   * Callback function for when json request comes back successfully
@@ -128,7 +142,8 @@ $(document).ready(function() {
   function lyricsCallBack() {
     setLyrics();
     var template = Handlebars.templates.quiz;
-    $('.main').append(template(context));
+    $('.main').html(template(context));
+    setStatus();
   }
   function setLyrics() {
     context.lyrics = currentGame.currentSongLyrics;
@@ -171,6 +186,7 @@ function Game() {
   var currentOtherQuestion = 0;
   var answeredCorrectly = 0;
   var status = 0;
+  var statusHistory = [];
   /* hold song lyrics from server */
   this.currentSongLyrics = '';
   /* object to hold json query of songs */
@@ -207,6 +223,12 @@ function Game() {
   /* increment bad question count */
   this.setcurrentOtherQuestion = function() {
     currentOtherQuestion++;
+  };
+  this.setStatusHistory = function(num) {
+    statusHistory.push(num);
+  };
+  this.getStatusHistory = function() {
+    return statusHistory;
   };
 }
 /*

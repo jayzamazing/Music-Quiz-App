@@ -2,6 +2,9 @@ body {
     color: #000000;
     background-color: #BBDEFB;
 }
+.navbar-default {
+  background-color: #87c5f8;
+}
 .jumbotron {
     min-width: 100%;
     height: 200px;
@@ -14,25 +17,26 @@ body {
     text-shadow: 2px 2px 3px #0D47A1;
 }
 .artists label {
-  width: 30rem;
   height: 10rem;
   margin-bottom: 1rem;
   white-space: normal;
-}
-.artists {
-  width: 61rem;
+  padding: 5px;
 }
 .genre label {
-    width: 8rem;
+  margin-bottom: 1rem;
 }
 .btn-primary, label {
   background-color: #2196F3;
+  border-radius: 0;
 }
-.genre {
-    width: 43rem;
+.btn-toolbar>.btn {
+  margin-left: 0;
 }
 .genre-submit, .artist-submit {
   width: 10rem;
+}
+.artist-submit {
+  width: 71px;
 }
 .col-centered {
     float: none;
@@ -51,15 +55,16 @@ h3 {
 .next .glyphicon {
   font-size: 5rem;
 }
-.status .glyphicon {
+.stats .glyphicon {
   font-size: 2rem;
   color: #2196F3;
 }
-.status li {
+.stats li {
   display: block;
+  text-align: right;
 }
-.stats {
-  margin-right: 5rem;
+.stats div {
+  margin-right: 1.5rem;
 }
 .playbutton {
   margin-top: 4rem;
@@ -68,10 +73,13 @@ h3 {
 .lyricsDiv {
   margin-bottom: 2rem;
 }
-.next {
+.next, .new-game {
   color: #2196F3;
   width: 50px;
 }
 .albumpic, .correct, .percentage, .singername {
   width: 300px;
+}
+.artists label {
+  margin-left: 0 !important;
 }

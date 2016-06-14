@@ -1,24 +1,39 @@
-<div class="col-xs-12 col-md-8 col-lg-8 col-lg-offset-2">
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-lg-offset-2 col-md-offset-2 col-centered">
     <form action="" id="answerForm">
         <div class="row">
+          <div class="col-xs-10 col-sm-8 col-md-10 col-lg-10">
             <h2>Who is the the singer and name of the song behind the following lyrics?</h2>
+          </div>
+          <div class="hidden-xs hidden-sm stats pull-right">
+            <ul>
+              <li><i class="glyphicon glyphicon-music" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-arrow-down" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-music" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-arrow-down" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-music" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-arrow-down" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-music" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-arrow-down" aria-hidden="true"></i></li>
+              <li><i class="glyphicon glyphicon-music" aria-hidden="true"></i></li>
+            </ul>
+          </div>
         </div>
         <div class="row lyricsDiv">
-          <div class="col-xs-12 col-md-8 col-lg-8"><h3>{{lyrics}}</h3></div>
-          <div class="col-xs-12 col-md-4 col-lg-4"><span class="glyphicon glyphicon-play-circle playbutton"></span></div>
+          <div class="col-xs-8 col-sm-8 col-md-10 col-lg-8"><h3>{{lyrics}}</h3></div>
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><span class="glyphicon glyphicon-play-circle playbutton pull-right"></span></div>
         </div>
         <div class="row">
-            <div class="btn-toolbar col-centered artists" data-toggle="buttons">
-                <label class="btn btn-primary" id="radio1">
+            <div class="btn-toolbar col-centered artists col-xs-12 col-sm-12" data-toggle="buttons">
+                <label class="btn btn-primary col-xs-12 col-sm-12 col-md-6 col-lg-6" id="radio1">
                     <input type="radio" name="options" autocomplete="off" value="1"><h4>{{song1}}<br>{{artist1}}</h4>
                 </label>
-                <label class="btn btn-primary" id="radio2">
+                <label class="btn btn-primary col-xs-12 col-sm-12 col-md-6 col-lg-6" id="radio2">
                     <input type="radio" name="options" autocomplete="off" value="2"><h4>{{song2}}<br>{{artist2}}</h4>
                 </label>
-                <label class="btn btn-primary" id="radio3">
+                <label class="btn btn-primary col-xs-12 col-sm-12 col-md-6 col-lg-6" id="radio3">
                     <input type="radio" name="options" autocomplete="off" value="3"><h4>{{song3}}<br>{{artist3}}</h4>
                 </label>
-                <label class="btn btn-primary" id="radio4">
+                <label class="btn btn-primary col-xs-12 col-sm-12 col-md-6 col-lg-6" id="radio4">
                     <input type="radio" name="options" autocomplete="off" value="4"><h4>{{song4}}<br>{{artist4}}</h4>
                 </label>
             </div>
