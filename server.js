@@ -248,23 +248,29 @@ function getLyrics(request, response, callback) {
     lyrics: function(callback) {
       req.get(searchInfo, function(error, response, body) {
                   console.log(response.statusCode);
-                  if (!error && response.statusCode === 200) {//if status 200
-                    //take the lyrics and shorten to a max of 160 characters
-                    lyrics = JSON.parse(body);
-                    lyrics = lyrics.message.body.lyrics.lyrics_body;
-                    lyrics = lyrics.substr(0, 160);
-                    //ensure last word is not cut in half
-                    lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
-                    console.log(lyrics);
-                    callback(null, lyrics);
-                  } else {
+                  try {
+                    if (!error && response.statusCode === 200) {//if status 200
+                      //take the lyrics and shorten to a max of 160 characters
+                      lyrics = JSON.parse(body);
+                      if (!lyrics) {
+                        throw 'no lyrics';
+                      }
+                      lyrics = lyrics.message.body.lyrics.lyrics_body;
+                      lyrics = lyrics.substr(0, 160);
+                      //ensure last word is not cut in half
+                      lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                      console.log(lyrics);
+                      callback(null, lyrics);
+                    }
+                  } catch(err) {
+                    console.log(err);
                     if (tries <= 3) {//retry query 3 times
                       tries++;
                       getLyrics(request, response, callback);//resurcive call to try again
                     }
-                    callback('could not get song lyrics', null);//return error
                   }
-                });
+                    callback('could not get song lyrics', null);//return error
+                  });
     }
   },
   function(err, results) {
