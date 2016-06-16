@@ -254,15 +254,16 @@ Game.prototype.getLyrics = function lyrics(callback, song, artist) {
   $.ajax({
     url: '/getLyrics',
     data: {songName: song, songArtist: artist},
+    datatype: "json",
     type: 'GET'
   }).done(function(result) {
-    ctx.currentSongLyrics = result;
+    ctx.currentSongLyrics = result.lyrics;
     callback();
   }).error(function(err) { //recursive call to move to next song and try getting those lyrics
     ctx.setCurrentQuestion();//increment currentquestion
     //recursive call to lyrics
-    lyrics(callback, currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName,
-    currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist);
+    lyrics(callback, ctx.songs.songDetails[ctx.getCurrentQuestion()].songName,
+    ctx.songs.songDetails[ctx.getCurrentQuestion()].songArtist);
   });
 };
 /*

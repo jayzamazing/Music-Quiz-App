@@ -5,6 +5,7 @@ var app = express();
 var req = require('request');
 var auto = require('run-auto');
 var tokenExpiration = 0;
+var tries = 0;
 
 app.use(express.static(__dirname + '/')); //set the base directory to find resources
 var spotifyApi = new SpotifyWebApi({ //instantiate and set credentials for spotifywebapi
@@ -12,10 +13,10 @@ var spotifyApi = new SpotifyWebApi({ //instantiate and set credentials for spoti
     clientSecret: process.env.client_secret
 });
 /*
-* Function to set the first page to load
-*/
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/index.html');
+ * Function to set the first page to load
+ */
+app.get("/", function(request, response) {
+    response.sendFile(__dirname + '/index.html');
 });
 /*
  * Function that gets initialized when navigating to base url. This function initially
@@ -27,12 +28,23 @@ app.get('/getToken', function(request, response) {
             //get credentials
             token: function(callback) {
                 console.log('trying to get token');
-                getToken(callback);//get token from spotify
+                getToken(callback); //get token from spotify
             }
         },
         function(err, results) {
+            tries = 0; //reset to 0
             console.log('err = ', err);
             console.log('results = ', results);
+            //send 500 if there was an issue with the request
+            if (results.token === null) {
+                response.statusCode = 500;
+                response.setHeader('Content-Type', 'application/json');
+                response.send(results);
+            } else { //send 200 if the request was good
+                response.statusCode = 200;
+                response.setHeader('Content-Type', 'application/json');
+                response.send(results);
+            }
         }
     );
 });
@@ -46,7 +58,7 @@ app.get('/getMusic', function(request, response) {
             //get credentials
             token: function(callback) {
                 console.log('trying to get token');
-                getToken(callback);//get token from spotify
+                getToken(callback); //get token from spotify
             },
             //get categories
             category: ['token', function(results, callback) {
@@ -54,19 +66,27 @@ app.get('/getMusic', function(request, response) {
                 getCategories(request, response, callback);
             }],
             /*
-           * Function to get the playlist using a playListId
-           * @require request.playListId = '5FJXhjdILmRA2z5bvz4nzf';
-           */
+             * Function to get the playlist using a playListId
+             * @require request.playListId = '5FJXhjdILmRA2z5bvz4nzf';
+             */
             playlist: ['token', 'category', function(results, callback) {
                 console.log('trying to get playlist');
-                console.log(results.category);
-                getPlayList(request, response, callback, results.category);
+                getList(request, response, callback, results);
             }]
         },
         function(err, results) {
+            tries = 0; //reset to 9
             console.log('err = ', err);
             console.log('results = ', results);
-            response.send(results.playlist);
+            if (results.token === null) { //send 500 if there was an issue with the request
+                response.statusCode = 500;
+                response.setHeader('Content-Type', 'application/json');
+                response.send(results.playlist);
+            } else { //send 200 if the request was good
+                response.statusCode = 200;
+                response.setHeader('Content-Type', 'application/json');
+                response.send(results.playlist);
+            }
         });
 });
 /*
@@ -79,13 +99,22 @@ app.get('/getLyrics', function(request, response) {
     auto({
             lyrics: function(callback) {
                 console.log('trying to get lyrics');
-                getLyrics(request, response, callback);//grab lyrics from musix
+                getLyrics(request, response, callback); //grab lyrics from musix
             }
         },
         function(err, results) {
             console.log('err = ', err);
             console.log('results = ', results);
-            response.send(results.lyrics);
+            if (results.lyrics === null) {
+                tries = 0;//reset to 0
+                response.statusCode = 500;//send 500 if request was bad
+                response.setHeader('Content-Type', 'application/json');
+                response.send(results);
+            } else {
+                response.statusCode = 200;//send 200 if request was good
+                response.setHeader('Content-Type', 'application/json');
+                response.send(results);
+            }
         });
 });
 /*
@@ -94,35 +123,31 @@ app.get('/getLyrics', function(request, response) {
 listener = app.listen(process.env.PORT, function() {
     console.log('Your app is listening on port ' + listener.address().port);
 });
+listener.timeout = 5000;//limit sockets to 5 seconds
 /*
-* Function to get client credentials token from spotify
-* @param callback - status message
-*/
+ * Function to get client credentials token from spotify
+ * @param callback - status message
+ */
 function getToken(callback) {
-  var tries = 0;
-  auto({
-    token: function(callback) {
-      if (tokenExpiration === undefined || tokenExpiration <= (Date.now() / 1000.0)) {
+    if (tokenExpiration <= (Date.now() / 1000.0)) {
         var options = {};
         //request to get token from spotify
         spotifyApi.clientCredentialsGrant(options, function(err, data) {
-            spotifyApi.setAccessToken(data.body.access_token); //store token locally
-            if (err && tries <= 3) {//retry query 3 times
-              tries++;
-              getToken(callback);
+            if (err) {
+                if (tries < 3) {//only try 3 times including initial request
+                    tries++;//increment tries
+                    getToken(callback);//recursive call to try again
+                } else {
+                    callback(err, null);//if tries failed, return error
+                }
             }
-            callback(err, 'have token');//resurcive call to try again
+            spotifyApi.setAccessToken(data.body.access_token); //store token locally
+            tokenExpiration = (Date.now() / 1000.0) + data.body.expires_in;//set the expiration on the token
+            callback(null, 'have token');
         });
-      } else {
+    } else {
         callback(null, 'already have token');
-      }
     }
-  },
-  function(err, results) {
-      console.log('err = ', err);
-      console.log('results = ', results);
-      callback(err, results);
-  });
 }
 /*
  * Function to get the categories from the spotify server
@@ -130,155 +155,144 @@ function getToken(callback) {
  * @param callback - returns categories
  */
 function getCategories(request, response, callback) {
-  var tries = 0;
-  auto({
-    category: function(callback) {
-      var options = {};
-      //get playlist from spotify
-      spotifyApi.getPlaylistsForCategory(request.query.category, options, function(err, data) {
-          //filter list
-          var filteredCategories = data.body.playlists.items.filter(function(item) {
-                  if (item.tracks.total > 50) //minimum number of songs needed for quiz with space for null values
-                      return item;
-              }) //return object with needed data
-              .map(function(obj) {
-                  //creates object with name and list id's
-                  var temp = {
-                      playlistName: obj.name,
-                      playlistid: obj.id
-                  };
-                  return temp;
-              });
-              if (err && tries <= 3) {//retry query 3 times
-                tries++;
-                getCategories(request, response, callback);//resurcive call to try again
-              }
-          callback(err, filteredCategories);
-      });
-    }
-  },
-  function(err, results) {
-      console.log('err = ', err);
-      console.log('results = ', results);
-      callback(err, results);
-  });
+    var options = {};
+    //get playlist from spotify
+    spotifyApi.getPlaylistsForCategory(request.query.category, options, function(err, data) {
+        if (err) {
+            if (tries < 3) {//only try 3 total times
+                tries++;//increment tries
+                getCategories(request, response, callback, results);//recursive call
+            } else {
+                callback(err, null);
+            }
+        }
+        //filter list
+        var filteredCategories = data.body.playlists.items.filter(function(item) {
+                if (item.tracks.total > 50) //minimum number of songs needed for quiz with space for null values
+                    return item;
+            }) //return object with needed data
+            .map(function(obj) {
+                //creates object with name and list id's
+                var temp = {
+                    playlistName: obj.name,
+                    playlistid: obj.id
+                };
+                return temp;
+            });
+        callback(null, filteredCategories);
+    });
 }
-function getPlayList(request, response, callback, results) {
-  auto({
-    playList: function(callback) {
-      //items to get from spotify call
-      var options = {
-          'fields': 'tracks.items.track.name,' +
-              'tracks.items.track.preview_url,' +
-              'tracks.items.track.artists,' +
-              'tracks.items.track.album.images'
-      };
-      //get the specified playlist using options as filter
-      spotifyApi.getPlaylist('spotify', results.category[randomizer(results.category.length)].playlistid,
-          options,
-          function(err, data) {
+/*
+* Function to get the playlist from spotify.
+* @param request
+* @param response
+* @param callback
+* @param results
+* @return {songDetails}
+*/
+function getList(request, response, callback, results) {
+    var list = results.category[randomizer(results.category.length)];
+    //items to get from spotify call
+    var options = {
+        'fields': 'tracks.items.track.name,' +
+            'tracks.items.track.preview_url,' +
+            'tracks.items.track.artists,' +
+            'tracks.items.track.album.images'
+    };
+    //get the specified playlist using options as filter
+    spotifyApi.getPlaylist('spotify', list.playlistid,
+        options,
+        function(err, data) {
+            if (err) {
+                delete results.category[list.playlistName];//delete list so we don't try to use the same list again
+                if (tries < 5) {//limit to 5 total tries
+                    tries++;//increment tries
+                    getList(request, response, callback, results);//recursive call
+                } else {
+                    callback(err, null);
+                }
+            }
             //sort list in random order
-              var playList = sortList(data.body.tracks.items);
-              //filter playlist
-              playList = playList.filter(function(item) {
-                      try {
-                          //ensure all values are not null
-                          if (item.track.name && item.track.preview_url && item.track.artists && item.track.album.images) {
-                              return item;
-                          }
-                      } catch (e) {
-                          console.log('value undefined');
-                      }
-                  })
-                  //create map of information needed
-                  .map(function(item, index) {
-                      var temp;
-                      //make object with certain names for access in app.js
-                      temp = JSON.stringify({
-                          songName: item.track.name,
-                          songUrl: item.track.preview_url,
-                          songArtist: item.track.artists[0].name,
-                          album: item.track.album.images[1].url
-                      });
-                      return temp;
-                  });
-              //filter out first 5 playlist objects and set as songdetails
-              var songDetails = JSON.parse('{"songDetails": [' + playList.filter(function(item, index) {
-                  if (index <= 10) {
-                      return item;
-                  }
-              }) + ']}');
-              //filter out playlist between 5 and 25 and set as othersongdetails
-              var otherSongDetails = JSON.parse('{"otherSongDetails": [' + playList.filter(function(item, index) {
-                  if (index > 10 && index <= 30) {
-                      return item;
-                  }
-              }) + ']}');
-              //join the two lists into one json object to return
-              for (var key in otherSongDetails) {
-                  if (otherSongDetails.hasOwnProperty(key))
-                      songDetails[key] = otherSongDetails[key];
-              }
-              if (err && tries <= 3) {//retry query 3 times
-                tries++;
-                getPlayList(request, response, callback, results);//resurcive call to try again
-              }
-              callback(err, songDetails);
-          });
-    }
-  },
-  function(err, results) {
-      console.log('err = ', err);
-      console.log('results = ', results);
-      callback(err, results.playList);
-  });
+            var playList = sortList(data.body.tracks.items);
+            //filter playlist
+            playList = playList.filter(function(item) {
+                    try {
+                        //ensure all values are not null
+                        if (item.track.name && item.track.preview_url &&
+                            Array.isArray(item.track.artists) &&
+                            Array.isArray(item.track.album.images)) {
+                            return item;
+                        }
+                    } catch (e) {
+                        console.log('value undefined');
+                    }
+                })
+                //create map of information needed
+                .map(function(item, index) {
+                    var temp;
+                    //make object with certain names for access in app.js
+                    temp = JSON.stringify({
+                        songName: item.track.name,
+                        songUrl: item.track.preview_url,
+                        songArtist: item.track.artists[0].name,
+                        album: item.track.album.images[1].url
+                    });
+                    return temp;
+                });
+            //filter out first 5 playlist objects and set as songdetails
+            var songDetails = JSON.parse('{"songDetails": [' + playList.filter(function(item, index) {
+                if (index <= 10) {
+                    return item;
+                }
+            }) + ']}');
+            //filter out playlist between 5 and 25 and set as othersongdetails
+            var otherSongDetails = JSON.parse('{"otherSongDetails": [' + playList.filter(function(item, index) {
+                if (index > 10 && index <= 30) {
+                    return item;
+                }
+            }) + ']}');
+            //join the two lists into one json object to return
+            for (var key in otherSongDetails) {
+                if (otherSongDetails.hasOwnProperty(key))
+                    songDetails[key] = otherSongDetails[key];
+            }
+            callback(null, songDetails);
+        });
 }
 
 /*
-* Function to get lyrics from Musix Api.
-*@param callback - returns lyrics
-*@require request.query.songName = 'Same Old Love';request.query.songArtist = 'Selena Gomez';
-*/
+ * Function to get lyrics from Musix Api.
+ * @param callback - returns lyrics
+ * @require request.query.songName = 'Same Old Love';request.query.songArtist = 'Selena Gomez';
+ * To test for copyright failure use the following:
+ * @require request.query.songName = 'Just A Friend'; request.query.songArtist = 'Biz Markie';
+ */
 function getLyrics(request, response, callback) {
-  var tries = 0;
-  var searchInfo = {//set songname and artist to search for
+    var searchInfo = { //set songname and artist to search for
         url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
-  };
-  auto({
-    lyrics: function(callback) {
-      req.get(searchInfo, function(error, response, body) {
-                  console.log(response.statusCode);
-                  try {
-                    if (!error && response.statusCode === 200) {//if status 200
-                      //take the lyrics and shorten to a max of 160 characters
-                      lyrics = JSON.parse(body);
-                      if (!lyrics) {
-                        throw 'no lyrics';
-                      }
-                      lyrics = lyrics.message.body.lyrics.lyrics_body;
-                      lyrics = lyrics.substr(0, 160);
-                      //ensure last word is not cut in half
-                      lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
-                      console.log(lyrics);
-                      callback(null, lyrics);
-                    }
-                  } catch(err) {
-                    console.log(err);
-                    if (tries <= 3) {//retry query 3 times
-                      tries++;
-                      getLyrics(request, response, callback);//resurcive call to try again
-                    }
-                  }
-                    callback('could not get song lyrics', null);//return error
-                  });
-    }
-  },
-  function(err, results) {
-      console.log('err = ', err);
-      console.log('results = ', results);
-      console.log(results.lyric);
-      callback(err, results.lyrics);
-  });
+    };
+    req.get(searchInfo, function(error, response, body) {
+        if (!error && response.statusCode === 200) { //if status 200
+            //take the lyrics and shorten to a max of 160 characters
+            lyrics = JSON.parse(body);
+            try {
+                lyrics = lyrics.message.body.lyrics.lyrics_body;
+                lyrics = lyrics.substr(0, 160);
+                //ensure last word is not cut in half
+                lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                callback(null, lyrics);
+            } catch (err) {
+                if (tries < 2) { //only try 2 times
+                    tries++;//increment tries
+                    console.log(tries);
+                    getLyrics(request, response, callback);//recursive call
+                } else {
+                    callback(err, null);
+                }
+
+            }
+        }
+    });
 }
 /*
  *Function to get random number
