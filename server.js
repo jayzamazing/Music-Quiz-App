@@ -239,15 +239,15 @@ function getList(request, response, callback, results) {
                     });
                     return temp;
                 });
-            //filter out first 5 playlist objects and set as songdetails
+            //filter out first 15 playlist objects and set as songdetails
             var songDetails = JSON.parse('{"songDetails": [' + playList.filter(function(item, index) {
-                if (index <= 10) {
+                if (index <= 15) {
                     return item;
                 }
             }) + ']}');
-            //filter out playlist between 5 and 25 and set as othersongdetails
+            //filter out playlist between 15 and 50 and set as othersongdetails
             var otherSongDetails = JSON.parse('{"otherSongDetails": [' + playList.filter(function(item, index) {
-                if (index > 10 && index <= 30) {
+                if (index > 15 && index <= 50) {
                     return item;
                 }
             }) + ']}');
