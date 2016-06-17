@@ -4,6 +4,7 @@
   "description": "Interactive quiz app that gets random music based on genre using the spotify api and musix match api.",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "build" : "handlebars js/templates/ > js/templates/templates.js"
   },
   "repository": {
