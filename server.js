@@ -120,8 +120,8 @@ app.get('/getLyrics', function(request, response) {
 /*
  * Start up node and listen on a specified port
  */
- var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
- var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+ var server_port = process.env.SERVER_PORT || 8080;
+ var server_ip_address = process.env.NODEJS_IP || '127.0.0.1';
 listener = app.listen(server_port, server_ip_address, function() {
     console.log('Your app is listening on port ' + listener.address().port);
 });
