@@ -91,13 +91,13 @@ $(document).ready(function() {
       $('.playbutton').css("color", "red");
     } else {
       stopMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton");
+      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-right");
       $('.playbutton').css("color", "green");
     }
   });
   //Function to detect when song has stopped playing, resets the playbutton
   $('#music').on('ended', function() {
-    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton");
+    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-right");
     $('.playbutton').css("color", "green");
   });
   $('body').on('click', '.newGame', function() {

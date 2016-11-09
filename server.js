@@ -230,6 +230,16 @@ function getList(request, response, callback, results) {
                 //create map of information needed
                 .map(function(item, index) {
                     var temp;
+                    if (item.track.name.length > 50) {
+                      item.track.name = item.track.name.substr(0, 160);
+                      //ensure last word is not cut in half
+                      item.track.name = item.track.name.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                    }
+                    if (item.track.artists[0].name.length > 50) {
+                      item.track.artists[0].name = item.track.artists[0].name.substr(0, 160);
+                      //ensure last word is not cut in half
+                      item.track.artists[0].name = item.track.artists[0].name.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                    }
                     //make object with certain names for access in app.js
                     temp = JSON.stringify({
                         songName: item.track.name,
@@ -277,9 +287,11 @@ function getLyrics(request, response, callback) {
             lyrics = JSON.parse(body);
             try {
                 lyrics = lyrics.message.body.lyrics.lyrics_body;
-                lyrics = lyrics.substr(0, 160);
-                //ensure last word is not cut in half
-                lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                if (lyrics.length > 160) {
+                  lyrics = lyrics.substr(0, 160);
+                  //ensure last word is not cut in half
+                  lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                }
                 callback(null, lyrics);
             } catch (err) {
                 if (tries < 2) { //only try 2 times

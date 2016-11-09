@@ -5,10 +5,14 @@ tertiary #165AFF #16D5FF #15FAE5
 */
 
 body {
-    color: #000000;
+    color: white;
     background-color: #2196F3;
     background-image: url('../1611.jpg');
     background-blend-mode: overlay;
+    font-family: 'Neuton', serif;
+}
+body, input {
+  text-shadow: 2px 2px 3px black;
 }
 .navbar-default {
   background-color: #151CFA;
@@ -21,6 +25,7 @@ body {
     background-origin: content-box;
     margin-top: 50px;
     background-color: transparent;
+    font-family: 'Philosopher', sans-serif;
 }
 .jumbotron h1 {
     color: black;
@@ -32,11 +37,15 @@ body {
   margin-bottom: 1rem;
   white-space: normal;
   padding: 5px;
+  margin-left: 2px;
+  margin-right: 2px;
+  width: 17rem;
 }
 .genre label {
   margin-bottom: 1rem;
-  margin-right: 5px;
-  width: 10rem;
+  margin-right: 3px;
+  margin-left: 3px;
+  width: 12rem;
 }
 .btn-primary, label {
   background-color: #16D5FF;
@@ -45,56 +54,51 @@ body {
 .btn-toolbar>.btn {
   margin-left: 0;
 }
-.genre-submit, .artist-submit {
-  width: 10rem;
+.genre-submit input, .artist-submit input{
+  width: 12rem;
 }
 .artist-submit {
-  width: 71px;
+  /*width: 71px;*/
 }
 .col-centered {
     float: none;
     margin: 0 auto;
 }
-h2 {
+/*h2 {
     opacity: 0.87;
 }
 h3 {
-  opacity: 0.54
-}
+  opacity: 0.87;
+  text-shadow: 2px 2px 3px white;
+}*/
 .artistinfo, .quiz, .col-centered {
   text-align: center;
 }
-.lyricsDiv .glyphicon,
+.playbutton,
 .next .glyphicon {
-  font-size: 5rem;
+  font-size: 5rem !important;
 }
 .stats .glyphicon {
   font-size: 2rem;
-  color: #2196F3;
+  /*color: white;*/
 }
 .stats li {
   display: block;
-  text-align: right;
-}
-.stats div {
-  margin-right: 1.5rem;
+  /*text-align: right;*/
 }
 .playbutton {
-  margin-top: 4rem;
+  /*margin-top: 4rem;*/
   color: green;
 }
 .lyricsDiv {
   margin-bottom: 2rem;
 }
 .next, .new-game {
-  color: #2196F3;
+  /*color: #2196F3;*/
   width: 50px;
 }
 .albumpic, .correct, .percentage, .singername {
   width: 300px;
-}
-.artists label {
-  margin-left: 0 !important;
 }
 footer {
     margin-top: 250px;
@@ -118,6 +122,5 @@ footer p {
     margin: 5px;
 }
 .social i, footer, footer a, .genre label, .genre-submit input {
-  color: black;
-  text-shadow: 2px 2px 3px #15FAE5;
+  color: white;
 }
