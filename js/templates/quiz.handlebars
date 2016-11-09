@@ -22,7 +22,11 @@
               <h3>
                 {{lyrics}}
             </h3>
-            <span class="pull-right glyphicon glyphicon-play-circle playbutton">
+            <div class="col-xs-10 col-sm-10 col-md-8 col-lg-8 col-centered">
+              <input id="vol-control" type="range" min="0" max="100" class="pull-right"
+              step="1" oninput="setVolume(this.value)" onchange="setVolume(this.value)"></input>
+              <span class="pull-left glyphicon glyphicon-play-circle playbutton">
+            </div>
           </div>
         </div>
         <div class="row">

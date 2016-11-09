@@ -87,7 +87,7 @@ $(document).ready(function() {
   $('.main').on('click', '.playbutton', function() {
     if ($('#music').get(0).paused === true) {
       playMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton");
+      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton pull-right");
       $('.playbutton').css("color", "red");
     } else {
       stopMusic('#music');
@@ -277,13 +277,21 @@ Game.prototype.setQuestionNumbers = function(number) {
 * Function to play music
 */
 function playMusic (music) {
-  $(music)[0].volume = 0.5;
-  $(music)[0].load();
-  $(music)[0].play();
+  var nowPlaying = $('#music')[0];
+  nowPlaying.volume = 0.5;
+  nowPlaying.load();
+  nowPlaying.play();
 }
 /*
 * Function to stop music
 */
 function stopMusic (music) {
   $(music)[0].pause();
+}
+/*
+* Function to deal with setting the volume of the musing playing
+*/
+function setVolume(val) {
+  var nowPlaying = $('#music')[0];
+  nowPlaying.volume = val / 100;
 }

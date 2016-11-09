@@ -124,3 +124,8 @@ footer p {
 .social i, footer, footer a, .genre label, .genre-submit input {
   color: white;
 }
+#vol-control {
+  margin-top: 2rem;
+  width: auto;
+  /*transform: rotateZ(270deg);*/
+}
