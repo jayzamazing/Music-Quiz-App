@@ -87,17 +87,17 @@ $(document).ready(function() {
   $('.main').on('click', '.playbutton', function() {
     if ($('#music').get(0).paused === true) {
       playMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton pull-right");
+      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton pull-left");
       $('.playbutton').css("color", "red");
     } else {
       stopMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-right");
+      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-left");
       $('.playbutton').css("color", "green");
     }
   });
   //Function to detect when song has stopped playing, resets the playbutton
   $('#music').on('ended', function() {
-    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-right");
+    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-left");
     $('.playbutton').css("color", "green");
   });
   $('body').on('click', '.newGame', function() {
@@ -124,7 +124,7 @@ $(document).ready(function() {
           $('.stats li:nth-child(' + i + ')').find('i').css('color', 'red');
         }
       } else {
-        $('.status li:nth-child(' + i + ')').find('i').css('color', 'blue');
+        $('.stats li:nth-child(' + i + ')').find('i').css('color', 'blue');
       }
     }
   }
