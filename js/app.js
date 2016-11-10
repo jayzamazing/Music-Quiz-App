@@ -267,7 +267,7 @@ Game.prototype.getLyrics = function lyrics(callback, song, artist) {
   }).done(function(result) {
     ctx.currentSongLyrics = result.lyrics;
     callback();
-  }).error(function(err) { //recursive call to move to next song and try getting those lyrics
+  }).fail(function(err) { //recursive call to move to next song and try getting those lyrics
     ctx.setCurrentQuestion();//increment currentquestion
     //recursive call to lyrics
     lyrics(callback, ctx.songs.songDetails[ctx.getCurrentQuestion()].songName,

@@ -286,13 +286,19 @@ function getLyrics(request, response, callback) {
             //take the lyrics and shorten to a max of 160 characters
             lyrics = JSON.parse(body);
             try {
-                lyrics = lyrics.message.body.lyrics.lyrics_body;
-                if (lyrics.length > 160) {
-                  lyrics = lyrics.substr(0, 160);
-                  //ensure last word is not cut in half
-                  lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                //ensure lyrics body is not undefined
+                if (lyrics.message.body.lyrics.lyrics_body) {
+                  lyrics = lyrics.message.body.lyrics.lyrics_body;
+                  if (lyrics.length > 160) {
+                    lyrics = lyrics.substr(0, 160);
+                    //ensure last word is not cut in half
+                    lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
+                  }
+                  callback(null, lyrics);
+                } else {
+                    console.log('lyrics body is empty, try again');
+                    throw('lyrics_body is undefined');
                 }
-                callback(null, lyrics);
             } catch (err) {
                 if (tries < 2) { //only try 2 times
                     tries++;//increment tries
