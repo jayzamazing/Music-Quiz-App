@@ -41,6 +41,7 @@ $(document).ready(function() {
   $('.main').on('submit', '#answerForm', function(e) {
     e.preventDefault();
     currentGame.setCurrentQuestion();
+    currentGame.setQuestionNumber();
     context = {};
 
     //if item checked matches the correct answer for the question
@@ -66,7 +67,7 @@ $(document).ready(function() {
     $('.main').append(template(context));
 
     //show next if there are more questions
-    if (currentGame.getCurrentQuestion() != 5) {
+    if (currentGame.getQuestionNumber() < 5) {
       $('.next-button').removeClass('hide');
     } else {
       $('.newGame').removeClass('hide');
@@ -87,17 +88,17 @@ $(document).ready(function() {
   $('.main').on('click', '.playbutton', function() {
     if ($('#music').get(0).paused === true) {
       playMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton");
+      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton pull-left");
       $('.playbutton').css("color", "red");
     } else {
       stopMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton");
+      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-left");
       $('.playbutton').css("color", "green");
     }
   });
   //Function to detect when song has stopped playing, resets the playbutton
   $('#music').on('ended', function() {
-    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton");
+    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-left");
     $('.playbutton').css("color", "green");
   });
   $('body').on('click', '.newGame', function() {
@@ -124,7 +125,7 @@ $(document).ready(function() {
           $('.stats li:nth-child(' + i + ')').find('i').css('color', 'red');
         }
       } else {
-        $('.status li:nth-child(' + i + ')').find('i').css('color', 'blue');
+        $('.stats li:nth-child(' + i + ')').find('i').css('color', 'blue');
       }
     }
   }
@@ -187,12 +188,19 @@ function Game() {
   var answeredCorrectly = 0;
   var status = 0;
   var statusHistory = [];
+  var questionNumber = 0;
   /* hold song lyrics from server */
   this.currentSongLyrics = '';
   /* object to hold json query of songs */
   this.songs = [];
   /* Number that has the correct answer for current question */
   this.correctAnswer = 0;
+  this.getQuestionNumber = function() {
+    return questionNumber;
+  }
+  this.setQuestionNumber = function() {
+    questionNumber++;
+  }
   /* get status number */
   this.getStatus = function() {
     return status;
@@ -259,7 +267,7 @@ Game.prototype.getLyrics = function lyrics(callback, song, artist) {
   }).done(function(result) {
     ctx.currentSongLyrics = result.lyrics;
     callback();
-  }).error(function(err) { //recursive call to move to next song and try getting those lyrics
+  }).fail(function(err) { //recursive call to move to next song and try getting those lyrics
     ctx.setCurrentQuestion();//increment currentquestion
     //recursive call to lyrics
     lyrics(callback, ctx.songs.songDetails[ctx.getCurrentQuestion()].songName,
@@ -277,13 +285,21 @@ Game.prototype.setQuestionNumbers = function(number) {
 * Function to play music
 */
 function playMusic (music) {
-  $(music)[0].volume = 0.5;
-  $(music)[0].load();
-  $(music)[0].play();
+  var nowPlaying = $('#music')[0];
+  nowPlaying.volume = 0.5;
+  nowPlaying.load();
+  nowPlaying.play();
 }
 /*
 * Function to stop music
 */
 function stopMusic (music) {
   $(music)[0].pause();
+}
+/*
+* Function to deal with setting the volume of the musing playing
+*/
+function setVolume(val) {
+  var nowPlaying = $('#music')[0];
+  nowPlaying.volume = val / 100;
 }
