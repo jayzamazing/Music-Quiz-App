@@ -41,6 +41,7 @@ $(document).ready(function() {
   $('.main').on('submit', '#answerForm', function(e) {
     e.preventDefault();
     currentGame.setCurrentQuestion();
+    currentGame.setQuestionNumber();
     context = {};
 
     //if item checked matches the correct answer for the question
@@ -66,7 +67,7 @@ $(document).ready(function() {
     $('.main').append(template(context));
 
     //show next if there are more questions
-    if (currentGame.getCurrentQuestion() != 5) {
+    if (currentGame.getQuestionNumber() < 5) {
       $('.next-button').removeClass('hide');
     } else {
       $('.newGame').removeClass('hide');
@@ -187,12 +188,19 @@ function Game() {
   var answeredCorrectly = 0;
   var status = 0;
   var statusHistory = [];
+  var questionNumber = 0;
   /* hold song lyrics from server */
   this.currentSongLyrics = '';
   /* object to hold json query of songs */
   this.songs = [];
   /* Number that has the correct answer for current question */
   this.correctAnswer = 0;
+  this.getQuestionNumber = function() {
+    return questionNumber;
+  }
+  this.setQuestionNumber = function() {
+    questionNumber++;
+  }
   /* get status number */
   this.getStatus = function() {
     return status;
