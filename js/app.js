@@ -1,11 +1,12 @@
 $(document).ready(function() {
-  var currentGame;
-  var context = {};
+  var currentGame, context = {}, tries = 0;
   $('.main').append(Handlebars.templates.intro);
   //Have the server get its token for spotify
   $.ajax({
     url: '/getToken',
     type: 'GET'
+  }).fail(function(err) {
+    displayError();
   });
   /*
   * game initialization once start game button is pressed
@@ -15,7 +16,7 @@ $(document).ready(function() {
     var genreChecked = $('.genre input:checked').val();
     if (genreChecked) {
       /* initialize game  */
-      currentGame = new newGame(songsCallBack, lyricsCallBack, $('.genre input:checked').val());
+      currentGame = new newGame(songsCallBack, displayError, $('.genre input:checked').val());
       $('.main').html('<h3>Please wait</h3>');
       $('h3').css('text-align', 'center');
     }
@@ -108,7 +109,7 @@ $(document).ready(function() {
   function resetInGame() {
     $('.main').html('');
     stopMusic('#music');
-    songsCallBack(lyricsCallBack);
+    songsCallBack();
   }
   /*
   * Function to handle status bar color changes based on right or
@@ -132,9 +133,9 @@ $(document).ready(function() {
   /*
   * Callback function for when json request comes back successfully
   */
-  function songsCallBack(lyricsCallBack) {
+  function songsCallBack() {
     setAnswers();
-    currentGame.getLyrics(lyricsCallBack, currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName,
+    currentGame.getLyrics(lyricsCallBack, displayError, currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songName,
     currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songArtist);
   }
   /*
@@ -167,14 +168,24 @@ $(document).ready(function() {
     }
     $('#music').attr('src', currentGame.songs.songDetails[currentGame.getCurrentQuestion()].songUrl);
   }
+  /*
+  * Function that will end the game on any kind of game stopping error
+  */
+  function displayError() {
+    //display error on the page
+    $('.main').html('<h3>There was an error with the server.</h3>');
+    $('h3').css('text-align', 'center');
+    //sets the questionNumber to 5 to ensure there is no continuation
+    currentGame.serverError();
+  }
 });
 /*
 * Initialize game and set game state
 */
-function newGame(songsCallBack, lyricsCallBack, genre) {
+function newGame(songsCallBack, failCallBack, genre) {
   game = new Game();
   /* get list of songs and pass in callback */
-  game.getSongInfo(songsCallBack, lyricsCallBack, genre);
+  game.getSongInfo(songsCallBack, failCallBack, genre);
   /* set main question number */
   game.setQuestionNumbers(4);
   return game;
@@ -195,6 +206,9 @@ function Game() {
   this.songs = [];
   /* Number that has the correct answer for current question */
   this.correctAnswer = 0;
+  this.serverError = function() {
+    questionNumber = 5;
+  }
   this.getQuestionNumber = function() {
     return questionNumber;
   }
@@ -242,7 +256,7 @@ function Game() {
 /*
 * Function to get song data from node server. Node server queries spotify for data.
 */
-Game.prototype.getSongInfo = function(callback, lyricsCallBack, genre) {
+Game.prototype.getSongInfo = function(callback, failCallBack, genre) {
   var ctx = this;
   $.ajax({
     url: '/getMusic',
@@ -250,14 +264,16 @@ Game.prototype.getSongInfo = function(callback, lyricsCallBack, genre) {
     type: 'GET'
   }).done(function(result) {
     ctx.songs = result;
-    callback(lyricsCallBack);
+    callback();
+  }).fail(function(err) {
+    failCallBack();
   });
 };
 /*
 * Method to get song lyrics from node server. Node server queries musixmatch for data.
 * Due to access limits, queries are limited on a per call bases.
 */
-Game.prototype.getLyrics = function (callback, song, artist) {
+Game.prototype.getLyrics = function (callback, failCallBack, song, artist) {
   var ctx = this;
   $.ajax({
     url: '/getLyrics',
@@ -265,13 +281,19 @@ Game.prototype.getLyrics = function (callback, song, artist) {
     datatype: "json",
     type: 'GET'
   }).done(function(result) {
+    tries = 0;
     ctx.currentSongLyrics = result.lyrics;
     callback();
-  }).fail(function(err) { //recursive call to move to next song and try getting those lyrics
-    ctx.setCurrentQuestion();//increment currentquestion
-    //recursive call to lyrics
-    ctx.getLyrics(callback, ctx.songs.songDetails[ctx.getCurrentQuestion()].songName,
-    ctx.songs.songDetails[ctx.getCurrentQuestion()].songArtist);
+  }).fail(function(err) {
+    if (tries < 5) {
+      tries++;
+      ctx.setCurrentQuestion();//increment currentquestion
+      //recursive call to lyrics
+      ctx.getLyrics(callback, ctx.songs.songDetails[ctx.getCurrentQuestion()].songName,
+      ctx.songs.songDetails[ctx.getCurrentQuestion()].songArtist);
+    } else {
+      failCallBack();
+    }
   });
 };
 /*
