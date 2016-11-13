@@ -15,7 +15,7 @@ var spotifyApi = new SpotifyWebApi({ //instantiate and set credentials for spoti
 /*
  * Function to set the first page to load
  */
-app.get("/", function(request, response) {
+app.get('/', function(request, response) {
     response.sendFile(__dirname + '/index.html');
 });
 /*
@@ -220,7 +220,8 @@ function getList(request, response, callback, results) {
                         //ensure all values are not null
                         if (item.track.name && item.track.preview_url &&
                             Array.isArray(item.track.artists) &&
-                            Array.isArray(item.track.album.images)) {
+                            Array.isArray(item.track.album.images) &&
+                            item.track.artists[0].name) {
                             return item;
                         }
                     } catch (e) {
@@ -230,16 +231,6 @@ function getList(request, response, callback, results) {
                 //create map of information needed
                 .map(function(item, index) {
                     var temp;
-                    if (item.track.name.length > 50) {
-                      item.track.name = item.track.name.substr(0, 160);
-                      //ensure last word is not cut in half
-                      item.track.name = item.track.name.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
-                    }
-                    if (item.track.artists[0].name.length > 50) {
-                      item.track.artists[0].name = item.track.artists[0].name.substr(0, 160);
-                      //ensure last word is not cut in half
-                      item.track.artists[0].name = item.track.artists[0].name.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
-                    }
                     //make object with certain names for access in app.js
                     temp = JSON.stringify({
                         songName: item.track.name,
@@ -277,41 +268,34 @@ function getList(request, response, callback, results) {
  * To test for copyright failure use the following:
  * @require request.query.songName = 'Just A Friend'; request.query.songArtist = 'Biz Markie';
  */
-function getLyrics(request, response, callback) {
-    var searchInfo = { //set songname and artist to search for
-        url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
-    };
-    req.get(searchInfo, function(error, response, body) {
-        if (!error && response.statusCode === 200) { //if status 200
-            //take the lyrics and shorten to a max of 160 characters
-            lyrics = JSON.parse(body);
-            try {
-                //ensure lyrics body is not undefined
-                if (lyrics.message.body.lyrics.lyrics_body) {
-                  lyrics = lyrics.message.body.lyrics.lyrics_body;
-                  if (lyrics.length > 160) {
-                    lyrics = lyrics.substr(0, 160);
-                    //ensure last word is not cut in half
-                    lyrics = lyrics.substr(0, Math.min(160, lyrics.lastIndexOf(" ")));
-                  }
-                  callback(null, lyrics);
-                } else {
-                    console.log('lyrics body is empty, try again');
-                    throw('lyrics_body is undefined');
-                }
-            } catch (err) {
-                if (tries < 2) { //only try 2 times
-                    tries++;//increment tries
-                    console.log(tries);
-                    getLyrics(request, response, callback);//recursive call
-                } else {
-                    callback(err, null);
-                }
-
-            }
-        }
-    });
-}
+ function getLyrics(request, response, callback) {
+     var searchInfo = { //set songname and artist to search for
+         url: 'http://api.musixmatch.com/ws/1.1/matcher.lyrics.get?apikey=' + process.env.apikey + '&q_track=' + request.query.songName + '&q_artist=' + request.query.songArtist
+     };
+     req.get(searchInfo, function(error, response, body) {
+       if (error || !response.statusCode === 200) {
+         if (tries < 2) {
+             tries++;//increment tries
+             console.log(tries);
+             getLyrics(request, response, callback);//recursive call
+         } else {
+           if (error) {
+             callback(err, null);
+           } else {
+             callback('could not get lyrics', null);
+           }
+         }
+       }
+       lyrics = JSON.parse(body);
+       if (lyrics.message.header.status_code === 200 && lyrics.message.body.lyrics &&
+         lyrics.message.body.lyrics.lyrics_body && lyrics.message.body.lyrics.lyrics_body !== '') {
+         lyrics = lyrics.message.body.lyrics.lyrics_body;
+         callback(null, lyrics);
+       } else {
+             callback('could not get lyrics', null);
+       }
+     });
+ }
 /*
  *Function to get random number
  * @param number

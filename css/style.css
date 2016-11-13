@@ -32,6 +32,10 @@ body, input {
     margin: 10px;
     text-shadow: 2px 2px 3px #151CFA;
 }
+.quiz-border {
+  border: 5px #151CFA solid;
+  background: #2196F3;
+}
 .artists label {
   height: 10rem;
   margin-bottom: 1rem;
@@ -39,7 +43,8 @@ body, input {
   padding: 5px;
   margin-left: 2px;
   margin-right: 2px;
-  width: 17rem;
+  width: 27rem;
+
 }
 .genre label {
   margin-bottom: 1rem;
@@ -71,7 +76,7 @@ h3 {
   opacity: 0.87;
   text-shadow: 2px 2px 3px white;
 }*/
-.artistinfo, .quiz, .col-centered {
+.artistinfo, .quiz, .col-centered, .quiz-border {
   text-align: center;
 }
 .playbutton,
@@ -86,12 +91,19 @@ h3 {
   display: block;
   /*text-align: right;*/
 }
+.stats {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 10px;
+  margin-top: 5px;
+}
 .playbutton {
   /*margin-top: 4rem;*/
   color: green;
 }
 .lyricsDiv {
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 }
 .next, .new-game {
   /*color: #2196F3;*/
