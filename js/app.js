@@ -12,14 +12,14 @@ $(document).ready(function() {
   * game initialization once start game button is pressed
   * hide initial items and show game items
   */
-  $('form').on('submit', function(e) {
+  $('.main').on('submit', '#startGame', function(e) {
+    e.preventDefault();
     var genreChecked = $('.genre input:checked').val();
     if (genreChecked) {
       displayWait();
       /* initialize game  */
       currentGame = new newGame(songsCallBack, displayError, genreChecked);
     }
-    e.preventDefault();
   });
   //Function to show which genre is active on the page
   $('.main').on('click', '.genre label', function(e) {
@@ -101,6 +101,7 @@ $(document).ready(function() {
     $('.playbutton').css("color", "green");
   });
   $('body').on('click', '.newGame', function() {
+    resetGameOver();
     //hide and change changed elements back to original
     $('.main').html(Handlebars.templates.intro);
   });
@@ -108,6 +109,10 @@ $(document).ready(function() {
     displayWait();
     stopMusic('#music');
     songsCallBack();
+  }
+  function resetGameOver() {
+    stopMusic('#music');
+    currentGame = null;
   }
   /*
   * Function to handle status bar color changes based on right or
@@ -262,6 +267,9 @@ function Game() {
   this.serverError = function() {
     questionNumber = 5;
   }
+  this.resetQuestionNumber = function() {
+    questionNumber = 0;
+  }
   this.getQuestionNumber = function() {
     return questionNumber;
   }
@@ -338,7 +346,9 @@ Game.prototype.getLyrics = function (callback, failCallBack, song, artist) {
     callback();
   }).fail(function(err) {
       ctx.setCurrentQuestion();//increment currentquestion
-      if (ctx.songs.songDetails[ctx.getCurrentQuestion()].songName &&
+      if (ctx.songs.songDetails[ctx.getCurrentQuestion()] &&
+      ctx.songs.songDetails[ctx.getCurrentQuestion()].songName &&
+      ctx.songs.songDetails[ctx.getCurrentQuestion()] &&
       ctx.songs.songDetails[ctx.getCurrentQuestion()].songArtist) {
         //recursive call to lyrics
         ctx.getLyrics(callback, failCallBack, ctx.songs.songDetails[ctx.getCurrentQuestion()].songName,
