@@ -87,18 +87,18 @@ $(document).ready(function() {
   $('.main').on('click', '.playbutton', function() {
     if ($('#music').get(0).paused === true) {
       playMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-stop playbutton pull-left");
-      $('.playbutton').css("color", "red");
+      $('.playbutton').attr('class', 'glyphicon glyphicon-stop playbutton pull-left');
+      $('.playbutton').css('color', 'red');
     } else {
       stopMusic('#music');
-      $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-left");
-      $('.playbutton').css("color", "green");
+      $('.playbutton').attr('class', 'glyphicon glyphicon-play-circle playbutton pull-left');
+      $('.playbutton').css('color', 'green');
     }
   });
   //Function to detect when song has stopped playing, resets the playbutton
   $('#music').on('ended', function() {
-    $('.playbutton').attr("class", "glyphicon glyphicon-play-circle playbutton pull-left");
-    $('.playbutton').css("color", "green");
+    $('.playbutton').attr('class', 'glyphicon glyphicon-play-circle playbutton pull-left');
+    $('.playbutton').css('color', 'green');
   });
   $('body').on('click', '.newGame', function() {
     resetGameOver();
@@ -187,7 +187,7 @@ $(document).ready(function() {
       //trim to 105 characters
       songName = songName.substr(0, 105);
       //ensure last word is not cut in half
-      songName = songName.substr(0, Math.min(105, songName.lastIndexOf(" ")));
+      songName = songName.substr(0, Math.min(105, songName.lastIndexOf(' ')));
     }
     return songName;
   }
@@ -202,7 +202,7 @@ $(document).ready(function() {
       //trim to 35 characters
       artistName = artistName.substr(0, 35);
       //ensure last word is not cut in half
-      artistName = artistName.substr(0, Math.min(35, artistName.lastIndexOf(" ")));
+      artistName = artistName.substr(0, Math.min(35, artistName.lastIndexOf(' ')));
     }
     return artistName;
   }
@@ -339,7 +339,7 @@ Game.prototype.getLyrics = function (callback, failCallBack, song, artist) {
   $.ajax({
     url: '/getLyrics',
     data: {songName: song, songArtist: artist},
-    datatype: "json",
+    datatype: 'json',
     type: 'GET'
   }).done(function(result) {
     ctx.currentSongLyrics = result.lyrics;

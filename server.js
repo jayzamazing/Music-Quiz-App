@@ -15,7 +15,7 @@ var spotifyApi = new SpotifyWebApi({ //instantiate and set credentials for spoti
 /*
  * Function to set the first page to load
  */
-app.get("/", function(request, response) {
+app.get('/', function(request, response) {
     response.sendFile(__dirname + '/index.html');
 });
 /*

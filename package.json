@@ -1,6 +1,6 @@
 {
   "name": "music-quiz-app",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "description": "Interactive quiz app that gets random music based on genre using the spotify api and musix match api.",
   "main": "server.js",
   "scripts": {
