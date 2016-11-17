@@ -16,7 +16,8 @@ The initial web and mobile wireframes are shown below:
 ![image](<./github/artist.png>)
 
 ###Prototype
-You can see the application in action at the following link: https://musicquizapp.herokuapp.com/
+You can see the application in action at the following link:
+http://musicquizapp.jayzamazing.com/
 
 ###Technical
 This project uses Html, CSS, Bootstrap, Handlebars, Run-Auto, Request, Jquery, Javascript, Json, Node, Express, and Npm. To get the name of the artist, song, and 30 second clip of the song the Spotify Api was used through a third party library called spotify-web-api-node. Once the application has the artist and song names lyrics are retrieved using the MusixMatch Api.
