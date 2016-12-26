@@ -6,9 +6,9 @@ tertiary #165AFF #16D5FF #15FAE5
 
 body {
     color: white;
-    background-color: #2196F3;
+    /*background-color: #2196F3;*/
     background-image: url('../1611.jpg');
-    background-blend-mode: overlay;
+    /*background-blend-mode: overlay;*/
     font-family: 'Neuton', serif;
 }
 body, input {
@@ -125,6 +125,11 @@ footer p {
   padding-left: 0;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 0;
+}
+.social-bottom, footer p {
+  margin-bottom: 0;
+  text-shadow: 2px 2px 3px #151CFA
 }
 .social-bottom {
   max-width: 217px;
@@ -133,8 +138,11 @@ footer p {
     display: inline-block;
     margin: 5px;
 }
-.social i, footer, footer a, .genre label, .genre-submit input {
+footer, footer a, .genre label, .genre-submit input {
   color: white;
+}
+.social i, footer p, footer a {
+  color: #2196F3;
 }
 #vol-control {
   margin-top: 2rem;
